@@ -52,6 +52,11 @@ const showError = (message) => {
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
+    // 添加token
+    const token = localStorage.getItem('smart_procurement_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     // 对于非静默请求，显示 loading
     if (!config.silent) {
       showLoading()
@@ -98,6 +103,9 @@ api.interceptors.response.use(
           break
         case 401:
           errorMessage = '未授权，请重新登录'
+          localStorage.removeItem('smart_procurement_token')
+          localStorage.removeItem('smart_procurement_user')
+          window.location.href = '/login'
           break
         case 403:
           errorMessage = '没有权限访问'

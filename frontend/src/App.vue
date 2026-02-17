@@ -1,18 +1,29 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useResponsive } from './composables'
+import { useResponsive, useAuth } from './composables'
+import { ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
 
-const menuItems = [
+const { user, isLoggedIn, logout, isAdmin } = useAuth()
+
+const baseMenuItems = [
   { path: '/', icon: 'DataAnalysis', title: '系统概览' },
   { path: '/chat', icon: 'ChatDotRound', title: 'AI对话' },
   { path: '/requirements', icon: 'Document', title: '需求审查' },
   { path: '/price', icon: 'TrendCharts', title: '价格参考' },
   { path: '/contract', icon: 'DocumentCopy', title: '合同分析' }
 ]
+
+const menuItems = computed(() => {
+  const items = [...baseMenuItems]
+  if (isAdmin.value) {
+    items.push({ path: '/admin', icon: 'Setting', title: '管理后台' })
+  }
+  return items
+})
 
 const activeMenu = computed(() => route.path)
 
@@ -37,6 +48,23 @@ const handleSelect = (key) => {
     closeDrawer()
   }
 }
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    logout()
+    router.push('/login')
+  } catch {}
+}
+
+const roleLabel = computed(() => {
+  const labels = { handler: '承办人', processor: '经办人', admin: '管理员' }
+  return labels[user.value?.role] || ''
+})
 </script>
 
 <template>
@@ -80,6 +108,19 @@ const handleSelect = (key) => {
               <span>{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
+          <!-- 用户信息区块 -->
+          <div class="user-info" v-if="isLoggedIn">
+            <div class="user-avatar">
+              <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+            </div>
+            <div class="user-detail">
+              <div class="username">{{ user?.username }}</div>
+              <div class="role">{{ roleLabel }}</div>
+            </div>
+            <el-button type="danger" text @click="handleLogout">
+              退出
+            </el-button>
+          </div>
         </div>
       </el-aside>
 
@@ -113,6 +154,19 @@ const handleSelect = (key) => {
               <span>{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
+          <!-- 用户信息区块 -->
+          <div class="user-info" v-if="isLoggedIn">
+            <div class="user-avatar">
+              <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+            </div>
+            <div class="user-detail">
+              <div class="username">{{ user?.username }}</div>
+              <div class="role">{{ roleLabel }}</div>
+            </div>
+            <el-button type="danger" text @click="handleLogout">
+              退出
+            </el-button>
+          </div>
         </div>
       </el-drawer>
 
@@ -179,6 +233,7 @@ const handleSelect = (key) => {
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
 .mobile-sidebar {
@@ -246,6 +301,31 @@ const handleSelect = (key) => {
 .main-content {
   padding: 30px;
   min-height: 100vh;
+}
+
+/* 用户信息区块 */
+.user-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.user-detail {
+  flex: 1;
+}
+.username {
+  color: #fff;
+  font-size: 14px;
+}
+.role {
+  color: #909399;
+  font-size: 12px;
 }
 
 /* 路由过渡动画 */

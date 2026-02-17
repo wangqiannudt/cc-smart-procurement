@@ -35,19 +35,41 @@ async def health_check():
     )
 
 # Database initialization
-from app.core.database import init_db
+from app.core.database import init_db, SessionLocal
+from app.core.security import get_password_hash
+from app.models.user import User, UserRole
 
 @app.on_event("startup")
 async def startup_event():
     init_db()
 
+    # 创建初始管理员账号
+    db = SessionLocal()
+    try:
+        admin = db.query(User).filter(User.username == "admin").first()
+        if not admin:
+            admin = User(
+                username="admin",
+                email="admin@example.com",
+                hashed_password=get_password_hash("admin123"),
+                role=UserRole.ADMIN.value,
+                is_active=True
+            )
+            db.add(admin)
+            db.commit()
+            print("初始管理员账号已创建: admin / admin123")
+    finally:
+        db.close()
+
 # Import routes
-from app.api import requirements, price, contract, chat, auth, users
+from app.api import requirements, price, contract, chat, auth, users, requirements_mgmt, statistics
 
 # Register routes
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(requirements.router, prefix="/api", tags=["requirements"])
+app.include_router(requirements_mgmt.router, prefix="/api/requirements", tags=["requirements_mgmt"])
+app.include_router(statistics.router, prefix="/api/statistics", tags=["statistics"])
 app.include_router(price.router, prefix="/api", tags=["price"])
 app.include_router(contract.router, prefix="/api", tags=["contract"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
