@@ -1,0 +1,226 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #0f0f1a;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #409EFF;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #66b1ff;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 全局 Loading 遮罩样式 */
+.el-loading-mask {
+  background-color: rgba(15, 15, 26, 0.9) !important;
+}
+
+.el-loading-spinner .el-loading-text {
+  color: #409EFF !important;
+  font-size: 16px !important;
+}
+
+/* Element Plus 消息提示样式优化 */
+.el-message {
+  border-radius: 8px !important;
+}
+
+.el-message--error {
+  background: linear-gradient(135deg, #2a1a1a 0%, #1a1a2e 100%) !important;
+  border: 1px solid rgba(245, 108, 108, 0.3) !important;
+}
+
+/* 响应式媒体查询 */
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+
+  body {
+    min-width: 100%;
+  }
+
+  /* 隐藏桌面端专用元素 */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* 卡片样式调整 */
+  .el-card {
+    margin: 8px 0 !important;
+  }
+
+  .el-card__body {
+    padding: 16px !important;
+  }
+
+  /* 表格响应式 */
+  .el-table {
+    font-size: 12px !important;
+  }
+
+  /* 按钮组响应式 */
+  .el-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* 表单响应式 */
+  .el-form-item__label {
+    float: none !important;
+    text-align: left !important;
+    padding-bottom: 8px !important;
+  }
+
+  .el-form-item__content {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 13px;
+  }
+
+  .el-card__body {
+    padding: 12px !important;
+  }
+
+  .el-button {
+    padding: 8px 12px !important;
+  }
+
+  .el-input__inner {
+    font-size: 14px !important;
+  }
+
+  /* 对话框响应式 */
+  .el-dialog {
+    width: 95% !important;
+    margin: 5vh auto !important;
+  }
+
+  /* 分页响应式 */
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .el-pagination__sizes,
+  .el-pagination__jump {
+    display: none !important;
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    padding: 20px !important;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  .el-button {
+    min-height: 44px;
+  }
+
+  .el-menu-item {
+    min-height: 48px;
+    line-height: 48px;
+  }
+
+  /* 增加点击区域 */
+  .el-input__icon {
+    width: 32px !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  :root {
+    --el-color-primary: #66b1ff;
+  }
+
+  .el-button--primary {
+    border-width: 2px;
+  }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .el-aside,
+  .mobile-header,
+  .el-drawer {
+    display: none !important;
+  }
+
+  .el-main {
+    padding: 0 !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

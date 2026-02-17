@@ -1,0 +1,23 @@
+fastapi==0.109.0
+python-dotenv==1.0.0
+uvicorn==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+python-docx==1.1.0
+PyPDF2==3.0.1
+jieba==0.42.1
+
+# AI and ML dependencies - compatible versions
+langchain==0.1.0
+langchain-community==0.0.10
+sentence-transformers==2.7.0
+huggingface-hub>=0.16.0,<1.0.0
+numpy>=1.21.0,<2.0.0
+torch>=1.9.0
+
+# LLM integration
+openai>=1.0.0
+
+# Time series prediction
+statsmodels>=0.14.0
+scipy>=1.9.0
