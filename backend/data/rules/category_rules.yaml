@@ -1,0 +1,149 @@
+# 品类规则主配置
+# 定义8类采购商品及其子类型
+
+meta:
+  name: category_rules
+  version: "1.0"
+  language_primary: zh-CN
+  description: "智慧采购系统品类规则配置"
+
+categories:
+  # 服务器
+  server:
+    name_cn: "服务器"
+    description_cn: "通用服务器、GPU/AI服务器、HPC节点等"
+    rule_file: "server_rules.yaml"
+    subtypes:
+      general_server:
+        name_cn: "通用服务器"
+        description_cn: "标准机架式/塔式服务器"
+      gpu_ai_server:
+        name_cn: "GPU/AI服务器"
+        description_cn: "配备GPU/AI加速器的训练/推理服务器"
+      hpc_node:
+        name_cn: "HPC节点"
+        description_cn: "高性能计算节点"
+
+  # 工作站
+  workstation:
+    name_cn: "工作站"
+    description_cn: "图形工作站、计算工作站"
+    rule_file: "workstation_rules.yaml"
+    subtypes:
+      graphics_workstation:
+        name_cn: "图形工作站"
+        description_cn: "用于图形设计、视频处理等工作站"
+      compute_workstation:
+        name_cn: "计算工作站"
+        description_cn: "用于数据分析、科学计算等工作站"
+
+  # 终端
+  terminal:
+    name_cn: "终端"
+    description_cn: "台式机、笔记本、平板等终端设备"
+    rule_file: "terminal_rules.yaml"
+    subtypes:
+      desktop:
+        name_cn: "台式机"
+        description_cn: "桌面办公电脑"
+      laptop:
+        name_cn: "笔记本"
+        description_cn: "便携式笔记本电脑"
+      tablet:
+        name_cn: "平板/移动平板"
+        description_cn: "平板电脑、三防平板等移动终端"
+      thin_client:
+        name_cn: "瘦客户机"
+        description_cn: "云桌面终端"
+
+  # 显示设备
+  display:
+    name_cn: "显示设备"
+    description_cn: "显示器、投影机、LED屏等"
+    rule_file: "display_rules.yaml"
+    subtypes:
+      monitor:
+        name_cn: "显示器"
+        description_cn: "LCD/LED显示器"
+      projector:
+        name_cn: "投影机"
+        description_cn: "投影设备"
+      led_screen:
+        name_cn: "LED显示屏"
+        description_cn: "LED大屏/拼接屏"
+      interactive_display:
+        name_cn: "交互式显示屏"
+        description_cn: "触摸屏/智能白板"
+
+  # 通信设备
+  communication:
+    name_cn: "通信设备"
+    description_cn: "网络设备、无线通信设备"
+    rule_file: "communication_rules.yaml"
+    subtypes:
+      switch:
+        name_cn: "交换机"
+        description_cn: "以太网交换机"
+      router:
+        name_cn: "路由器"
+        description_cn: "网络路由器"
+      wireless:
+        name_cn: "无线设备"
+        description_cn: "无线AP、基站等"
+      firewall:
+        name_cn: "防火墙"
+        description_cn: "网络安全设备"
+
+  # 无人平台
+  uav_platform:
+    name_cn: "无人平台"
+    description_cn: "无人机、无人船、无人车等"
+    rule_file: "uav_platform_rules.yaml"
+    subtypes:
+      uav:
+        name_cn: "无人机"
+        description_cn: "各类无人驾驶飞行器"
+      usv:
+        name_cn: "无人船"
+        description_cn: "无人水面舰艇"
+      ug_v:
+        name_cn: "无人车"
+        description_cn: "无人地面车辆"
+
+  # 仪器仪表
+  instrument:
+    name_cn: "仪器仪表"
+    description_cn: "测量仪器、分析仪器"
+    rule_file: "instrument_rules.yaml"
+    subtypes:
+      oscilloscope:
+        name_cn: "示波器"
+        description_cn: "数字示波器"
+      spectrum_analyzer:
+        name_cn: "频谱分析仪"
+        description_cn: "频谱分析设备"
+      power_supply:
+        name_cn: "电源"
+        description_cn: "可编程电源"
+      multimeter:
+        name_cn: "万用表"
+        description_cn: "数字万用表"
+      signal_generator:
+        name_cn: "信号发生器"
+        description_cn: "信号源"
+
+  # 加速卡
+  accelerator:
+    name_cn: "加速卡"
+    description_cn: "GPU、FPGA、NPU等加速卡"
+    rule_file: "accelerator_rules.yaml"
+    subtypes:
+      gpu_card:
+        name_cn: "GPU加速卡"
+        description_cn: "图形处理器加速卡"
+      fpga_card:
+        name_cn: "FPGA加速卡"
+        description_cn: "现场可编程门阵列"
+      npu_card:
+        name_cn: "NPU加速卡"
+        description_cn: "神经网络处理器"

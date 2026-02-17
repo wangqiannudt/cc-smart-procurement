@@ -1,0 +1,296 @@
+# 无人平台规则配置
+meta:
+  name: uav_platform_rules
+  version: "1.0"
+  category: uav_platform
+  applies_to:
+    - uav
+    - usv
+    - ug_v
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "任务", "用于"]
+        validation:
+          not_empty: true
+          message_cn: "需明确无人平台用途和应用场景"
+
+      - field_id: hardware.type
+        label_cn: "平台类型"
+        priority: P0
+        required_for: ["all"]
+        type: "enum"
+        keywords_cn: ["无人机", "无人船", "无人车", "UGV", "USV"]
+        enums:
+          - "uav"
+          - "usv"
+          - "ugv"
+        validation:
+          message_cn: "需明确平台类型"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "套数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+  - group_id: performance
+    group_label_cn: "性能指标"
+    items:
+      - field_id: payload.capacity
+        label_cn: "载重能力"
+        priority: P0
+        required_for: ["all"]
+        type: "float"
+        unit: "kg"
+        keywords_cn: ["载重", "载荷", "负载能力", "有效载荷"]
+        validation:
+          min_value: 0
+          message_cn: "载重能力为必填项"
+
+      - field_id: endurance.time
+        label_cn: "续航时间"
+        priority: P0
+        required_for: ["all"]
+        type: "float"
+        unit: "h"
+        keywords_cn: ["续航时间", "续航", "飞行时间", "作业时间", "航时"]
+        validation:
+          min_value: 0
+          message_cn: "续航时间为必填项"
+
+      - field_id: endurance.range
+        label_cn: "续航距离"
+        priority: P1
+        required_for: ["all"]
+        type: "float"
+        unit: "km"
+        keywords_cn: ["航程", "续航距离", "作业半径", "覆盖范围"]
+        validation:
+          message_cn: "建议明确续航距离"
+
+      - field_id: speed.max
+        label_cn: "最大速度"
+        priority: P2
+        required_for: ["all"]
+        type: "float"
+        unit: "km/h"
+        keywords_cn: ["最大速度", "航速", "行驶速度", "飞行速度"]
+        validation:
+          message_cn: "建议明确最大速度"
+
+  - group_id: uav_specs
+    group_label_cn: "无人机特有规格"
+    items:
+      - field_id: uav.max_altitude
+        label_cn: "最大飞行高度"
+        priority: P1
+        required_for: ["uav"]
+        type: "float"
+        unit: "m"
+        keywords_cn: ["飞行高度", "升限", "最大高度", "作业高度"]
+        validation:
+          message_cn: "建议明确最大飞行高度"
+
+      - field_id: uav.wind_resistance
+        label_cn: "抗风等级"
+        priority: P2
+        required_for: ["uav"]
+        type: "text"
+        keywords_cn: ["抗风", "抗风等级", "风速", "风力"]
+        validation:
+          message_cn: "建议明确抗风等级"
+
+      - field_id: uav.propulsion
+        label_cn: "动力类型"
+        priority: P1
+        required_for: ["uav"]
+        type: "enum_or_text"
+        keywords_cn: ["电动", "油动", "混合动力", "氢燃料"]
+        enums:
+          - "electric"
+          - "fuel"
+          - "hybrid"
+          - "hydrogen"
+        validation:
+          message_cn: "建议明确动力类型"
+
+      - field_id: uav.takeoff_weight
+        label_cn: "起飞重量"
+        priority: P2
+        required_for: ["uav"]
+        type: "float"
+        unit: "kg"
+        keywords_cn: ["起飞重量", "最大起飞重量", "整机重量"]
+        validation:
+          message_cn: "建议明确起飞重量"
+
+  - group_id: usv_specs
+    group_label_cn: "无人船特有规格"
+    items:
+      - field_id: usv.hull_length
+        label_cn: "船体长度"
+        priority: P1
+        required_for: ["usv"]
+        type: "float"
+        unit: "m"
+        keywords_cn: ["船体长度", "船长", "长度"]
+        validation:
+          message_cn: "建议明确船体长度"
+
+      - field_id: usv.draft
+        label_cn: "吃水深度"
+        priority: P2
+        required_for: ["usv"]
+        type: "float"
+        unit: "m"
+        keywords_cn: ["吃水", "吃水深度", "吃水深度"]
+        validation:
+          message_cn: "建议明确吃水深度"
+
+      - field_id: usv.propulsion
+        label_cn: "推进方式"
+        priority: P1
+        required_for: ["usv"]
+        type: "text"
+        keywords_cn: ["推进", "螺旋桨", "喷水", "电机"]
+        validation:
+          message_cn: "建议明确推进方式"
+
+  - group_id: ugv_specs
+    group_label_cn: "无人车特有规格"
+    items:
+      - field_id: ugv.dimensions
+        label_cn: "外形尺寸"
+        priority: P2
+        required_for: ["ug_v"]
+        type: "text"
+        keywords_cn: ["外形尺寸", "尺寸", "长宽高"]
+        validation:
+          message_cn: "建议明确外形尺寸"
+
+      - field_id: ugv.terrain
+        label_cn: "地形适应性"
+        priority: P1
+        required_for: ["ug_v"]
+        type: "text"
+        keywords_cn: ["地形", "越野", "爬坡", "通过性"]
+        validation:
+          message_cn: "建议明确地形适应性要求"
+
+  - group_id: control
+    group_label_cn: "控制与通信"
+    items:
+      - field_id: control.mode
+        label_cn: "控制模式"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["控制模式", "遥控", "自主", "半自主", "航线"]
+        validation:
+          message_cn: "建议明确控制模式"
+
+      - field_id: control.range
+        label_cn: "遥控距离"
+        priority: P1
+        required_for: ["all"]
+        type: "float"
+        unit: "km"
+        keywords_cn: ["遥控距离", "控制距离", "通信距离"]
+        validation:
+          message_cn: "建议明确遥控距离"
+
+      - field_id: communication.link
+        label_cn: "通信链路"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["通信", "链路", "数传", "图传", "4G", "5G", "卫星"]
+        validation:
+          message_cn: "建议明确通信链路要求"
+
+  - group_id: payload
+    group_label_cn: "任务载荷"
+    items:
+      - field_id: payload.type
+        label_cn: "载荷类型"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["载荷", "相机", "传感器", "雷达", "红外", "激光"]
+        validation:
+          message_cn: "建议明确任务载荷类型"
+
+      - field_id: payload.mount
+        label_cn: "挂载能力"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["挂载", "接口", "安装"]
+        validation:
+          message_cn: "建议明确挂载能力要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "功能测试", "性能测试"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务", "培训"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.brand_directivity
+    priority: P0
+    description_cn: "检测到品牌指定"
+    trigger_patterns:
+      cn_keywords:
+        - "大疆"
+        - "DJI"
+        - "极飞"
+        - "零度"
+        - "亿航"
+        - "道通"
+    action:
+      report_message_cn: "存在品牌指向性，建议删除品牌名称"
+
+  - rule_id: risk.model_designation
+    priority: P0
+    description_cn: "检测到型号指定"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(Mavic|Phantom|Inspire|Matrice|Agras)\\s*\\d*\\b"
+        - "(?i)\\b(EVO|Typhoon|Yuneec)\\s*\\w*\\b"
+    action:
+      report_message_cn: "检测到具体型号，建议改为性能参数描述"

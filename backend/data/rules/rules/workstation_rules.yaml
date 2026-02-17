@@ -1,0 +1,229 @@
+# 工作站规则配置
+meta:
+  name: workstation_rules
+  version: "1.0"
+  category: workstation
+  applies_to:
+    - graphics_workstation
+    - compute_workstation
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "使用场景", "用于", "主要功能"]
+        validation:
+          not_empty: true
+          message_cn: "需明确工作站的用途和应用场景"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "套数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+      - field_id: hardware.form_factor
+        label_cn: "机箱形态"
+        priority: P2
+        required_for: ["all"]
+        type: "enum_or_text"
+        keywords_cn: ["塔式", "机架式", "小型", "全高", "卧式", "立式"]
+        enums:
+          - "tower"
+          - "rack"
+          - "small_form"
+          - "other"
+        validation:
+          message_cn: "建议明确机箱形态"
+
+  - group_id: compute
+    group_label_cn: "计算资源"
+    items:
+      - field_id: cpu.specification
+        label_cn: "CPU规格"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["CPU", "处理器", "核心数", "主频"]
+        keywords_en: ["CPU", "processor", "core", "GHz"]
+        validation:
+          not_empty: true
+          forbid_explicit_model: true
+          message_cn: "需明确CPU规格（核心数、主频），不得指定型号"
+
+      - field_id: cpu.core_count
+        label_cn: "CPU核心数"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "cores"
+        keywords_cn: ["核心", "核数", "处理器核心"]
+        validation:
+          min_value: 1
+          message_cn: "CPU核心数为必填项"
+
+      - field_id: cpu.base_frequency
+        label_cn: "CPU主频"
+        priority: P1
+        required_for: ["all"]
+        type: "float"
+        unit: "ghz"
+        keywords_cn: ["主频", "频率", "GHz"]
+        validation:
+          min_value: 0.1
+          message_cn: "建议明确CPU主频要求"
+
+      - field_id: gpu.specification
+        label_cn: "GPU规格"
+        priority: P0
+        required_for: ["graphics_workstation"]
+        type: "text"
+        keywords_cn: ["显卡", "GPU", "图形卡", "显示芯片", "显存"]
+        keywords_en: ["GPU", "graphics", "VRAM"]
+        validation:
+          not_empty: true
+          forbid_explicit_model: true
+          message_cn: "图形工作站需明确GPU规格（显存、算力），不得指定型号"
+
+      - field_id: gpu.memory
+        label_cn: "GPU显存"
+        priority: P0
+        required_for: ["graphics_workstation"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["显存", "GPU显存", "显存容量"]
+        validation:
+          min_value: 1
+          message_cn: "GPU显存为必填项"
+
+      - field_id: gpu.count
+        label_cn: "GPU数量"
+        priority: P2
+        required_for: ["graphics_workstation"]
+        type: "integer"
+        keywords_cn: ["显卡数量", "GPU数量", "卡数"]
+        validation:
+          message_cn: "建议明确GPU数量"
+
+  - group_id: memory_storage
+    group_label_cn: "内存与存储"
+    items:
+      - field_id: memory.capacity
+        label_cn: "内存容量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["内存", "内存容量", "RAM"]
+        validation:
+          min_value: 1
+          message_cn: "内存容量为必填项"
+
+      - field_id: memory.type
+        label_cn: "内存类型"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["DDR4", "DDR5", "ECC"]
+        validation:
+          message_cn: "建议明确内存类型"
+
+      - field_id: storage.system_disk
+        label_cn: "系统盘"
+        priority: P0
+        required_for: ["all"]
+        type: "storage_spec"
+        keywords_cn: ["系统盘", "SSD", "NVMe", "硬盘"]
+        validation:
+          not_empty: true
+          message_cn: "需明确系统盘类型和容量"
+
+      - field_id: storage.data_disk
+        label_cn: "数据盘"
+        priority: P2
+        required_for: ["all"]
+        type: "storage_spec"
+        keywords_cn: ["数据盘", "存储盘", "第二硬盘", "HDD"]
+        validation:
+          message_cn: "建议明确数据盘规格"
+
+  - group_id: display_io
+    group_label_cn: "显示与接口"
+    items:
+      - field_id: display.output
+        label_cn: "显示输出"
+        priority: P1
+        required_for: ["graphics_workstation"]
+        type: "text"
+        keywords_cn: ["显示输出", "视频接口", "DP", "HDMI", "多屏"]
+        validation:
+          message_cn: "建议明确显示输出接口要求"
+
+      - field_id: io.ports
+        label_cn: "接口要求"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["USB", "接口", "网口", "PCIe"]
+        validation:
+          message_cn: "建议明确接口要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "性能要求"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项，需可测试、可量化"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.explicit_model
+    priority: P0
+    description_cn: "检测到CPU/GPU型号指定"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(core\\s*i[3579]\\-\\d+|xeon\\s*\\w+|ryzen\\s*\\d+)\\b"
+        - "(?i)\\b(geforce|quadro|rtx|gtx)\\s*\\d+\\b"
+    action:
+      report_message_cn: "检测到具体型号，存在指向性风险，建议改为性能参数描述"
+
+  - rule_id: risk.vague_expression
+    priority: P1
+    description_cn: "检测到模糊表述"
+    trigger_patterns:
+      cn_keywords:
+        - "高性能"
+        - "高端配置"
+        - "主流配置"
+    action:
+      report_message_cn: "建议使用具体配置参数替代模糊表述"

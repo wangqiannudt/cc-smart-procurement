@@ -1,0 +1,247 @@
+# 显示设备规则配置
+meta:
+  name: display_rules
+  version: "1.0"
+  category: display
+  applies_to:
+    - monitor
+    - projector
+    - led_screen
+    - interactive_display
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "使用场景", "用于"]
+        validation:
+          not_empty: true
+          message_cn: "需明确显示设备用途"
+
+      - field_id: hardware.type
+        label_cn: "设备类型"
+        priority: P0
+        required_for: ["all"]
+        type: "enum"
+        keywords_cn: ["显示器", "投影机", "LED屏", "交互屏", "触摸屏"]
+        enums:
+          - "monitor"
+          - "projector"
+          - "led_screen"
+          - "interactive_display"
+        validation:
+          message_cn: "需明确设备类型"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "套数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+  - group_id: display_specs
+    group_label_cn: "显示规格"
+    items:
+      - field_id: display.size
+        label_cn: "屏幕尺寸"
+        priority: P0
+        required_for: ["monitor", "projector", "led_screen"]
+        type: "float"
+        unit: "inch"
+        keywords_cn: ["尺寸", "屏幕尺寸", "显示面积", "对角线", "英寸"]
+        validation:
+          min_value: 1
+          message_cn: "屏幕尺寸为必填项"
+
+      - field_id: display.resolution
+        label_cn: "分辨率"
+        priority: P0
+        required_for: ["monitor", "projector", "interactive_display"]
+        type: "text"
+        keywords_cn: ["分辨率", "像素", "1080P", "2K", "4K", "8K", "全高清"]
+        validation:
+          not_empty: true
+          message_cn: "分辨率为必填项"
+
+      - field_id: display.brightness
+        label_cn: "亮度"
+        priority: P1
+        required_for: ["monitor", "projector", "led_screen"]
+        type: "integer"
+        unit: "cd/m2"
+        keywords_cn: ["亮度", "nit", "流明", "cd/m²"]
+        validation:
+          message_cn: "建议明确亮度要求"
+
+      - field_id: display.contrast_ratio
+        label_cn: "对比度"
+        priority: P2
+        required_for: ["monitor", "projector"]
+        type: "text"
+        keywords_cn: ["对比度"]
+        validation:
+          message_cn: "建议明确对比度要求"
+
+      - field_id: display.refresh_rate
+        label_cn: "刷新率"
+        priority: P2
+        required_for: ["monitor"]
+        type: "integer"
+        unit: "Hz"
+        keywords_cn: ["刷新率", "Hz"]
+        validation:
+          message_cn: "建议明确刷新率要求"
+
+      - field_id: display.color_gamut
+        label_cn: "色域"
+        priority: P2
+        required_for: ["monitor"]
+        type: "text"
+        keywords_cn: ["色域", "sRGB", "NTSC", "Adobe RGB", "DCI-P3"]
+        validation:
+          message_cn: "建议明确色域要求"
+
+  - group_id: projector_specs
+    group_label_cn: "投影机特有规格"
+    items:
+      - field_id: projector.technology
+        label_cn: "投影技术"
+        priority: P1
+        required_for: ["projector"]
+        type: "enum_or_text"
+        keywords_cn: ["投影技术", "DLP", "LCD", "激光", "灯泡"]
+        enums:
+          - "DLP"
+          - "LCD"
+          - "laser"
+          - "lamp"
+        validation:
+          message_cn: "建议明确投影技术"
+
+      - field_id: projector.throw_ratio
+        label_cn: "投射比"
+        priority: P2
+        required_for: ["projector"]
+        type: "text"
+        keywords_cn: ["投射比", "投影距离"]
+        validation:
+          message_cn: "建议明确投射比要求"
+
+      - field_id: projector.lamp_life
+        label_cn: "光源寿命"
+        priority: P2
+        required_for: ["projector"]
+        type: "integer"
+        unit: "h"
+        keywords_cn: ["光源寿命", "灯泡寿命"]
+        validation:
+          message_cn: "建议明确光源寿命"
+
+  - group_id: led_specs
+    group_label_cn: "LED屏特有规格"
+    items:
+      - field_id: led.pixel_pitch
+        label_cn: "点间距"
+        priority: P0
+        required_for: ["led_screen"]
+        type: "float"
+        unit: "mm"
+        keywords_cn: ["点间距", "像素间距", "P值", "间距"]
+        validation:
+          min_value: 0.1
+          message_cn: "LED屏点间距为必填项"
+
+      - field_id: led.module_size
+        label_cn: "模组尺寸"
+        priority: P2
+        required_for: ["led_screen"]
+        type: "text"
+        keywords_cn: ["模组尺寸", "箱体尺寸"]
+        validation:
+          message_cn: "建议明确模组尺寸"
+
+  - group_id: interactive_specs
+    group_label_cn: "交互功能"
+    items:
+      - field_id: interactive.touch_points
+        label_cn: "触摸点数"
+        priority: P1
+        required_for: ["interactive_display"]
+        type: "integer"
+        keywords_cn: ["触摸点数", "触控点", "多点触控"]
+        validation:
+          message_cn: "建议明确触摸点数"
+
+      - field_id: interactive.touch_technology
+        label_cn: "触控技术"
+        priority: P2
+        required_for: ["interactive_display"]
+        type: "text"
+        keywords_cn: ["红外", "电容", "电磁", "触控技术"]
+        validation:
+          message_cn: "建议明确触控技术类型"
+
+  - group_id: interface
+    group_label_cn: "接口"
+    items:
+      - field_id: io.video_ports
+        label_cn: "视频接口"
+        priority: P1
+        required_for: ["monitor", "interactive_display"]
+        type: "text"
+        keywords_cn: ["视频接口", "HDMI", "DP", "VGA", "Type-C"]
+        validation:
+          message_cn: "建议明确视频接口要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "坏点", "亮点"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.brand_directivity
+    priority: P0
+    description_cn: "检测到品牌指定"
+    trigger_patterns:
+      cn_keywords:
+        - "戴尔显示器"
+        - "三星"
+        - "LG"
+        - "飞利浦"
+        - "明基"
+        - "爱普生"
+        - "索尼投影"
+    action:
+      report_message_cn: "存在品牌指向性，建议删除品牌名称"

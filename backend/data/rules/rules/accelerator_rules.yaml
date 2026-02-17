@@ -1,0 +1,341 @@
+# 加速卡规则配置
+meta:
+  name: accelerator_rules
+  version: "1.0"
+  category: accelerator
+  applies_to:
+    - gpu_card
+    - fpga_card
+    - npu_card
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+  unit_normalization:
+    gb:
+      aliases: ["GB", "G", "gb", "GiB", "吉字节"]
+    tflops:
+      aliases: ["TFLOPS", "TF", "T", "万亿次"]
+    tops:
+      aliases: ["TOPS", "T", "万亿次操作"]
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "计算任务", "用于", "训练", "推理"]
+        validation:
+          not_empty: true
+          message_cn: "需明确加速卡用途（如深度学习训练/推理、科学计算等）"
+
+      - field_id: hardware.type
+        label_cn: "加速卡类型"
+        priority: P0
+        required_for: ["all"]
+        type: "enum"
+        keywords_cn: ["GPU", "FPGA", "NPU", "加速卡", "计算卡"]
+        enums:
+          - "gpu_card"
+          - "fpga_card"
+          - "npu_card"
+          - "other"
+        validation:
+          message_cn: "需明确加速卡类型"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "张数", "卡数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+  - group_id: compute
+    group_label_cn: "计算能力"
+    items:
+      - field_id: compute.memory_capacity
+        label_cn: "显存/内存容量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["显存", "内存", "HBM", "容量", "GB"]
+        validation:
+          min_value: 1
+          message_cn: "显存/内存容量为必填项"
+
+      - field_id: compute.memory_bandwidth
+        label_cn: "显存带宽"
+        priority: P1
+        required_for: ["gpu_card"]
+        type: "text"
+        keywords_cn: ["带宽", "显存带宽", "HBM带宽", "TB/s"]
+        validation:
+          message_cn: "建议明确显存带宽"
+
+      - field_id: compute.fp32_performance
+        label_cn: "FP32算力"
+        priority: P1
+        required_for: ["gpu_card"]
+        type: "text"
+        keywords_cn: ["FP32", "单精度", "算力", "TFLOPS"]
+        validation:
+          message_cn: "建议明确FP32算力"
+
+      - field_id: compute.fp16_performance
+        label_cn: "FP16/BF16算力"
+        priority: P1
+        required_for: ["gpu_card", "npu_card"]
+        type: "text"
+        keywords_cn: ["FP16", "BF16", "半精度", "算力"]
+        validation:
+          message_cn: "建议明确FP16/BF16算力"
+
+      - field_id: compute.int8_performance
+        label_cn: "INT8算力"
+        priority: P2
+        required_for: ["gpu_card", "npu_card"]
+        type: "text"
+        keywords_cn: ["INT8", "整型", "量化", "TOPS"]
+        validation:
+          message_cn: "建议明确INT8算力"
+
+  - group_id: gpu_specs
+    group_label_cn: "GPU特有规格"
+    items:
+      - field_id: gpu.cuda_cores
+        label_cn: "CUDA核心数"
+        priority: P2
+        required_for: ["gpu_card"]
+        type: "integer"
+        keywords_cn: ["CUDA核心", "流处理器", "核心数"]
+        validation:
+          message_cn: "建议明确CUDA核心数"
+
+      - field_id: gpu.tensor_cores
+        label_cn: "Tensor核心"
+        priority: P2
+        required_for: ["gpu_card"]
+        type: "text"
+        keywords_cn: ["Tensor核心", "张量核心"]
+        validation:
+          message_cn: "建议明确Tensor核心规格"
+
+      - field_id: gpu.rt_cores
+        label_cn: "RT核心"
+        priority: P2
+        required_for: ["gpu_card"]
+        type: "text"
+        keywords_cn: ["RT核心", "光线追踪"]
+        validation:
+          message_cn: "建议明确RT核心规格"
+
+  - group_id: npu_specs
+    group_label_cn: "NPU特有规格"
+    items:
+      - field_id: npu.topology
+        label_cn: "互联拓扑"
+        priority: P1
+        required_for: ["npu_card"]
+        type: "text"
+        keywords_cn: ["互联", "拓扑", "芯片互联", "片间互联"]
+        validation:
+          message_cn: "建议明确互联拓扑"
+
+      - field_id: npu.precision_support
+        label_cn: "精度支持"
+        priority: P1
+        required_for: ["npu_card"]
+        type: "text"
+        keywords_cn: ["精度", "FP16", "BF16", "INT8", "混合精度"]
+        validation:
+          message_cn: "建议明确支持的精度类型"
+
+  - group_id: fpga_specs
+    group_label_cn: "FPGA特有规格"
+    items:
+      - field_id: fpga.logic_cells
+        label_cn: "逻辑单元"
+        priority: P0
+        required_for: ["fpga_card"]
+        type: "text"
+        keywords_cn: ["逻辑单元", "LUT", "查找表", "LE"]
+        validation:
+          not_empty: true
+          message_cn: "FPGA逻辑单元数为必填项"
+
+      - field_id: fpga.dsp_slices
+        label_cn: "DSP数量"
+        priority: P1
+        required_for: ["fpga_card"]
+        type: "integer"
+        keywords_cn: ["DSP", "乘法器", "DSP Slice"]
+        validation:
+          message_cn: "建议明确DSP数量"
+
+      - field_id: fpga.bram
+        label_cn: "片上存储"
+        priority: P1
+        required_for: ["fpga_card"]
+        type: "text"
+        keywords_cn: ["BRAM", "片上存储", "Block RAM"]
+        validation:
+          message_cn: "建议明确片上存储容量"
+
+  - group_id: interface
+    group_label_cn: "接口与互联"
+    items:
+      - field_id: interface.pcie
+        label_cn: "PCIe接口"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["PCIe", "Gen4", "Gen5", "x16", "x8"]
+        validation:
+          message_cn: "建议明确PCIe接口规格"
+
+      - field_id: interface.interconnect
+        label_cn: "高速互联"
+        priority: P2
+        required_for: ["gpu_card", "npu_card"]
+        type: "text"
+        keywords_cn: ["NVLink", "NVSwitch", "Infinity", "HCCS", "互联"]
+        validation:
+          message_cn: "建议明确高速互联能力"
+
+      - field_id: interface.cooling
+        label_cn: "散热方式"
+        priority: P2
+        required_for: ["all"]
+        type: "enum_or_text"
+        keywords_cn: ["散热", "风冷", "液冷", "被动散热"]
+        enums:
+          - "air_active"
+          - "air_passive"
+          - "liquid"
+        validation:
+          message_cn: "建议明确散热方式"
+
+      - field_id: interface.form_factor
+        label_cn: "板卡形态"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["形态", "全长", "半高", "FHFL", "HHHL", "SXM", "PCIe卡"]
+        validation:
+          message_cn: "建议明确板卡形态"
+
+  - group_id: power
+    group_label_cn: "功耗"
+    items:
+      - field_id: power.tdp
+        label_cn: "热设计功耗"
+        priority: P1
+        required_for: ["all"]
+        type: "integer"
+        unit: "W"
+        keywords_cn: ["功耗", "TDP", "热设计功耗", "瓦"]
+        validation:
+          message_cn: "建议明确热设计功耗"
+
+      - field_id: power.aux_connector
+        label_cn: "辅助供电"
+        priority: P2
+        required_for: ["gpu_card"]
+        type: "text"
+        keywords_cn: ["供电", "8pin", "6pin", "12VHPWR"]
+        validation:
+          message_cn: "建议明确辅助供电要求"
+
+  - group_id: software
+    group_label_cn: "软件生态"
+    items:
+      - field_id: software.framework_support
+        label_cn: "框架支持"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["框架", "PyTorch", "TensorFlow", "CUDA", "软件栈"]
+        validation:
+          message_cn: "建议明确支持的软件框架"
+
+      - field_id: software.driver_support
+        label_cn: "驱动支持"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["驱动", "Linux", "Windows", "内核版本"]
+        validation:
+          message_cn: "建议明确驱动支持要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "性能测试", "benchmark"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.explicit_model
+    priority: P0
+    description_cn: "检测到GPU/NPU型号指定"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(geforce|quadro|rtx|gtx|tesla|titan|radeon|instinct)\\s*\\d+\\b"
+        - "(?i)\\b(a\\d{2,4}|h\\d{2,4}|mi\\d{2,4})\\b"
+        - "(?i)\\b(v100|a100|h100|h800|a800|4090|3090)\\b"
+    action:
+      report_message_cn: "检测到具体型号，存在指向性风险，建议改为性能参数描述"
+
+  - rule_id: risk.brand_directivity
+    priority: P0
+    description_cn: "检测到品牌指定"
+    trigger_patterns:
+      cn_keywords:
+        - "英伟达"
+        - "NVIDIA"
+        - "nvidia"
+        - "AMD"
+        - "英特尔"
+        - "Intel"
+        - "华为昇腾"
+        - "寒武纪"
+    action:
+      report_message_cn: "存在品牌指向性，建议删除品牌名称"
+
+  - rule_id: risk.benchmark_reference
+    priority: P1
+    description_cn: "检测到标杆引用"
+    trigger_patterns:
+      cn_phrases:
+        - "性能不低于"
+        - "算力相当于"
+        - "对标"
+    action:
+      report_message_cn: "建议将标杆引用改为具体算力、显存等参数描述"

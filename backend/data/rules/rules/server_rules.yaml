@@ -1,0 +1,282 @@
+# 服务器规则配置
+meta:
+  name: server_rules
+  version: "1.0"
+  category: server
+  applies_to:
+    - general_server
+    - gpu_ai_server
+    - hpc_node
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+  unit_normalization:
+    ghz:
+      aliases: ["GHz", "ghz", "Ghz", "吉赫兹"]
+    gb:
+      aliases: ["GB", "G", "gb", "GiB", "吉字节"]
+    tb:
+      aliases: ["TB", "tb", "TiB", "太字节"]
+    gbe:
+      aliases: ["GbE", "gbe", "Gbe", "千兆以太", "万兆", "25G", "40G", "100G", "200G", "400G"]
+    watt:
+      aliases: ["W", "w", "瓦", "瓦特"]
+    u_height:
+      aliases: ["U", "u", "机架U数", "U高"]
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "用途/任务背景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "任务背景", "应用场景", "建设目标", "使用场景", "主要用于"]
+        validation:
+          not_empty: true
+          reject_if_only_contains_cn:
+            - "先进水平"
+            - "性能优异"
+            - "国际领先"
+            - "国内领先"
+          message_cn: "用途描述过于口号化，建议补充具体负载类型（训练/推理/渲染/仿真等）"
+
+      - field_id: delivery.scope
+        label_cn: "交付范围"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["交付", "供货范围", "交货内容", "交付内容", "随机资料", "配件", "安装", "上架"]
+        validation:
+          must_mention_any_cn:
+            - ["硬件", "主机", "节点"]
+            - ["配件", "线缆", "滑轨"]
+            - ["资料", "说明书", "出厂报告", "质保"]
+          message_cn: "交付范围需覆盖硬件、配件与资料"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "节点数", "套数", "采购数量"]
+        validation:
+          min_value: 1
+          message_cn: "数量缺失或不合法（需为正整数）"
+
+      - field_id: hardware.form_factor
+        label_cn: "形态"
+        priority: P2
+        required_for: ["all"]
+        type: "enum_or_text"
+        keywords_cn: ["机架", "机架式", "塔式", "1U", "2U", "4U", "整机", "机柜"]
+        enums:
+          - "rack_1u"
+          - "rack_2u"
+          - "rack_4u"
+          - "tower"
+          - "rack_other"
+          - "other"
+        validation:
+          message_cn: "建议补充服务器形态（机架U数/塔式）"
+
+  - group_id: compute
+    group_label_cn: "计算资源"
+    items:
+      - field_id: cpu.core_count_total
+        label_cn: "CPU总核心数"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "cores"
+        keywords_cn: ["核心", "核数", "CPU总核心数", "总核心数", "处理器核心"]
+        keywords_en: ["core", "cores"]
+        validation:
+          min_value: 1
+          forbid_explicit_model: true
+          message_cn: "CPU核心数为必填指标，且不得出现CPU型号"
+
+      - field_id: cpu.base_frequency_min
+        label_cn: "CPU基准主频"
+        priority: P0
+        required_for: ["all"]
+        type: "float"
+        unit: "ghz"
+        keywords_cn: ["主频", "基准主频", "频率", "GHz"]
+        keywords_en: ["GHz", "frequency", "base clock"]
+        validation:
+          min_value: 0.1
+          message_cn: "CPU主频为必填指标"
+
+      - field_id: cpu.socket_count
+        label_cn: "CPU路数"
+        priority: P2
+        required_for: ["all"]
+        type: "enum"
+        enums: ["1", "2", "other"]
+        keywords_cn: ["单路", "双路", "路数", "socket"]
+        validation:
+          message_cn: "建议明确CPU路数（单路/双路）"
+
+      - field_id: accelerator.type
+        label_cn: "加速器类型"
+        priority: P0
+        required_for: ["gpu_ai_server"]
+        type: "enum_or_text"
+        keywords_cn: ["加速器", "GPU", "显卡", "AI加速", "NPU"]
+        keywords_en: ["GPU", "NPU", "accelerator"]
+        validation:
+          message_cn: "GPU/AI服务器必须明确加速器类型（仅写类型，不写品牌/型号）"
+
+      - field_id: accelerator.count_min
+        label_cn: "加速器数量"
+        priority: P0
+        required_for: ["gpu_ai_server"]
+        type: "integer"
+        keywords_cn: ["加速器数量", "GPU数量", "显卡数量", "卡数", "张"]
+        validation:
+          min_value: 1
+          message_cn: "加速器数量为必填指标（GPU/AI服务器）"
+
+      - field_id: accelerator.memory_per_unit_min
+        label_cn: "单卡显存"
+        priority: P0
+        required_for: ["gpu_ai_server"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["显存", "显存容量", "单卡显存"]
+        keywords_en: ["VRAM", "memory"]
+        validation:
+          min_value: 1
+          message_cn: "单卡显存为必填指标（GPU/AI服务器）"
+
+  - group_id: memory_storage
+    group_label_cn: "内存与存储"
+    items:
+      - field_id: memory.capacity_min
+        label_cn: "内存容量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["内存", "内存容量", "DDR", "ECC"]
+        validation:
+          min_value: 1
+          message_cn: "内存容量为必填指标"
+
+      - field_id: storage.system_disk
+        label_cn: "系统盘"
+        priority: P0
+        required_for: ["all"]
+        type: "storage_spec"
+        keywords_cn: ["系统盘", "SSD", "NVMe", "固态", "启动盘"]
+        validation:
+          not_empty: true
+          message_cn: "系统盘必须写明介质类型与容量"
+
+      - field_id: storage.data_storage
+        label_cn: "数据存储"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["数据盘", "存储", "HDD", "机械盘", "SSD", "NVMe", "容量", "TB"]
+        validation:
+          message_cn: "建议补充数据盘/数据存储需求"
+
+  - group_id: network_io
+    group_label_cn: "网络与扩展"
+    items:
+      - field_id: network.bandwidth_min
+        label_cn: "网络带宽"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["网络", "带宽", "万兆", "25G", "100G", "IB", "RoCE", "以太网"]
+        validation:
+          not_empty: true
+          message_cn: "网络带宽为必填指标"
+
+      - field_id: network.port_count_min
+        label_cn: "高速网口数量"
+        priority: P2
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["网口", "端口", "口数", "SFP", "QSFP"]
+        validation:
+          message_cn: "建议补充高速网口数量"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "性能验收", "稳定性", "负载", "benchmark", "基准"]
+        validation:
+          not_empty: true
+          reject_if_contains_cn:
+            - "性能优异"
+            - "达到先进水平"
+            - "行业领先"
+          message_cn: "验收指标必须可测试、可量化"
+
+      - field_id: support.warranty_terms
+        label_cn: "质保与服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后", "响应", "上门", "备件"]
+        validation:
+          not_empty: true
+          message_cn: "质保与服务为必填项"
+
+risk_rules:
+  - rule_id: risk.explicit_model_or_brand
+    priority: P0
+    description_cn: "检测到明确品牌/型号，存在采购指向性风险"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(geforce|quadro|rtx|tesla|radeon|instinct|xeon|epyc|threadripper)\\b"
+        - "(?i)\\b(a\\d{2,4}|h\\d{2,4}|v\\d{2,4})\\b"
+        - "(?i)\\b(mi\\d{2,4})\\b"
+        - "(?i)\\b(poweredge|proliant|thinksystem)\\b"
+      cn_keywords:
+        - "型号"
+        - "品牌"
+        - "指定"
+        - "仅限"
+    action:
+      report_message_cn: "出现品牌/型号属于高风险表达，建议改为性能与能力参数描述"
+
+  - rule_id: risk.benchmark_model_reference
+    priority: P1
+    description_cn: "检测到'性能不低于某型号'类表述"
+    trigger_patterns:
+      cn_phrases:
+        - "性能不低于"
+        - "不弱于"
+        - "不差于"
+    action:
+      report_message_cn: "建议将标杆式型号引用改为参数化表达"
+
+  - rule_id: risk.vague_expression
+    priority: P1
+    description_cn: "检测到模糊表述"
+    trigger_patterns:
+      cn_keywords:
+        - "大约"
+        - "大概"
+        - "左右"
+        - "高性能"
+        - "先进水平"
+        - "国际领先"
+    action:
+      report_message_cn: "建议使用具体、可量化的表述替代模糊表达"

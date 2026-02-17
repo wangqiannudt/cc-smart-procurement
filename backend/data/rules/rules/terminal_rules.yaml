@@ -1,0 +1,236 @@
+# 终端设备规则配置（台式机、笔记本、平板、瘦客户机）
+meta:
+  name: terminal_rules
+  version: "1.0"
+  category: terminal
+  applies_to:
+    - desktop
+    - laptop
+    - tablet
+    - thin_client
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "使用场景", "用于", "主要功能"]
+        validation:
+          not_empty: true
+          message_cn: "需明确设备用途和应用场景"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "套数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+      - field_id: hardware.type
+        label_cn: "设备类型"
+        priority: P0
+        required_for: ["all"]
+        type: "enum"
+        keywords_cn: ["台式机", "笔记本", "平板", "瘦客户机", "一体机"]
+        enums:
+          - "desktop"
+          - "laptop"
+          - "tablet"
+          - "thin_client"
+          - "all_in_one"
+        validation:
+          message_cn: "需明确设备类型"
+
+  - group_id: compute
+    group_label_cn: "计算资源"
+    items:
+      - field_id: cpu.specification
+        label_cn: "CPU规格"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["CPU", "处理器", "核心数", "主频"]
+        validation:
+          not_empty: true
+          forbid_explicit_model: true
+          message_cn: "需明确CPU规格（核心数、主频）"
+
+      - field_id: cpu.core_count
+        label_cn: "CPU核心数"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "cores"
+        keywords_cn: ["核心", "核数", "处理器核心"]
+        validation:
+          min_value: 1
+          message_cn: "CPU核心数为必填项"
+
+      - field_id: cpu.base_frequency
+        label_cn: "CPU主频"
+        priority: P1
+        required_for: ["all"]
+        type: "float"
+        unit: "ghz"
+        keywords_cn: ["主频", "频率", "GHz"]
+        validation:
+          message_cn: "建议明确CPU主频要求"
+
+  - group_id: memory_storage
+    group_label_cn: "内存与存储"
+    items:
+      - field_id: memory.capacity
+        label_cn: "内存容量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        unit: "gb"
+        keywords_cn: ["内存", "内存容量", "RAM"]
+        validation:
+          min_value: 1
+          message_cn: "内存容量为必填项"
+
+      - field_id: storage.capacity
+        label_cn: "存储容量"
+        priority: P0
+        required_for: ["all"]
+        type: "storage_spec"
+        keywords_cn: ["硬盘", "SSD", "存储", "容量"]
+        validation:
+          not_empty: true
+          message_cn: "存储容量为必填项"
+
+  - group_id: display
+    group_label_cn: "显示设备"
+    items:
+      - field_id: display.size
+        label_cn: "屏幕尺寸"
+        priority: P1
+        required_for: ["laptop", "tablet", "all"]
+        type: "float"
+        unit: "inch"
+        keywords_cn: ["屏幕", "显示器", "尺寸", "英寸"]
+        validation:
+          message_cn: "建议明确屏幕尺寸"
+
+      - field_id: display.resolution
+        label_cn: "分辨率"
+        priority: P2
+        required_for: ["laptop", "tablet"]
+        type: "text"
+        keywords_cn: ["分辨率", "1080P", "2K", "4K"]
+        validation:
+          message_cn: "建议明确分辨率要求"
+
+  - group_id: portable
+    group_label_cn: "便携性（笔记本/平板）"
+    items:
+      - field_id: battery.life
+        label_cn: "电池续航"
+        priority: P1
+        required_for: ["laptop", "tablet"]
+        type: "integer"
+        unit: "h"
+        keywords_cn: ["续航", "电池", "待机时间"]
+        validation:
+          message_cn: "笔记本/平板建议明确续航时间"
+
+      - field_id: weight.max
+        label_cn: "重量要求"
+        priority: P2
+        required_for: ["laptop", "tablet"]
+        type: "float"
+        unit: "kg"
+        keywords_cn: ["重量", "重量不超过", "轻便"]
+        validation:
+          message_cn: "建议明确重量要求"
+
+      - field_id: durability
+        label_cn: "防护等级"
+        priority: P2
+        required_for: ["tablet"]
+        type: "text"
+        keywords_cn: ["三防", "防水", "防尘", "防摔", "IP等级"]
+        validation:
+          message_cn: "移动平板建议明确防护等级"
+
+  - group_id: network_io
+    group_label_cn: "网络与接口"
+    items:
+      - field_id: network.type
+        label_cn: "网络类型"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["WiFi", "有线网", "蓝牙", "4G", "5G"]
+        validation:
+          message_cn: "建议明确网络连接要求"
+
+      - field_id: io.ports
+        label_cn: "接口要求"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["USB", "接口", "HDMI", "Type-C"]
+        validation:
+          message_cn: "建议明确接口要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "功能要求"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.explicit_model
+    priority: P0
+    description_cn: "检测到CPU型号指定"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(core\\s*i[3579]\\-\\d+|ryzen\\s*\\d+|pentium|celeron)\\b"
+    action:
+      report_message_cn: "检测到具体型号，建议改为性能参数描述"
+
+  - rule_id: risk.brand_directivity
+    priority: P0
+    description_cn: "检测到品牌指定"
+    trigger_patterns:
+      cn_keywords:
+        - "联想"
+        - "戴尔"
+        - "惠普"
+        - "华为"
+        - "苹果"
+        - "MacBook"
+    action:
+      report_message_cn: "存在品牌指向性，建议删除品牌名称"

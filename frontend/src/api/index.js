@@ -150,8 +150,18 @@ export const apiEndpoints = {
   // 健康检查
   health: () => request.get('/health'),
 
+  // 品类管理
+  getCategories: () => request.get('/categories'),
+  getCategoryFields: (categoryId, subtypeId = null) => {
+    const url = subtypeId
+      ? `/categories/${categoryId}/fields?subtype_id=${subtypeId}`
+      : `/categories/${categoryId}/fields`
+    return request.get(url)
+  },
+
   // 需求审查
   reviewRequirements: (formData) => request.upload('/review-requirements', formData),
+  reviewRequirementsText: (data) => request.post('/review-requirements/text', data),
 
   // 价格参考
   getPriceReference: (params) => request.get('/price-reference', params),

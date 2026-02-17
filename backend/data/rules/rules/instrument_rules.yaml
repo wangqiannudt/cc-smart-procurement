@@ -1,0 +1,330 @@
+# 仪器仪表规则配置
+meta:
+  name: instrument_rules
+  version: "1.0"
+  category: instrument
+  applies_to:
+    - oscilloscope
+    - spectrum_analyzer
+    - power_supply
+    - multimeter
+    - signal_generator
+
+global:
+  priorities:
+    P0: "must_fix"
+    P1: "risk_notice"
+    P2: "suggest_improve"
+
+fields:
+  - group_id: basic
+    group_label_cn: "基础信息"
+    items:
+      - field_id: purpose.use_case
+        label_cn: "应用场景"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["用途", "应用场景", "测试对象", "用于"]
+        validation:
+          not_empty: true
+          message_cn: "需明确仪器用途和应用场景"
+
+      - field_id: hardware.type
+        label_cn: "仪器类型"
+        priority: P0
+        required_for: ["all"]
+        type: "enum"
+        keywords_cn: ["示波器", "频谱仪", "电源", "万用表", "信号源"]
+        enums:
+          - "oscilloscope"
+          - "spectrum_analyzer"
+          - "power_supply"
+          - "multimeter"
+          - "signal_generator"
+        validation:
+          message_cn: "需明确仪器类型"
+
+      - field_id: delivery.quantity
+        label_cn: "数量"
+        priority: P0
+        required_for: ["all"]
+        type: "integer"
+        keywords_cn: ["数量", "台数", "套数"]
+        validation:
+          min_value: 1
+          message_cn: "数量为必填项"
+
+  - group_id: measurement
+    group_label_cn: "测量能力"
+    items:
+      - field_id: measurement.range
+        label_cn: "测量范围"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["测量范围", "量程", "范围", "满量程"]
+        validation:
+          not_empty: true
+          message_cn: "测量范围为必填项"
+
+      - field_id: measurement.accuracy
+        label_cn: "测量精度"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["精度", "准确度", "误差", "分辨率"]
+        validation:
+          not_empty: true
+          message_cn: "测量精度为必填项"
+
+      - field_id: measurement.resolution
+        label_cn: "分辨率"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["分辨率", "最小分辨"]
+        validation:
+          message_cn: "建议明确分辨率"
+
+  - group_id: oscilloscope_specs
+    group_label_cn: "示波器规格"
+    items:
+      - field_id: oscilloscope.bandwidth
+        label_cn: "带宽"
+        priority: P0
+        required_for: ["oscilloscope"]
+        type: "float"
+        unit: "MHz"
+        keywords_cn: ["带宽", "频带宽度", "模拟带宽"]
+        validation:
+          min_value: 1
+          message_cn: "示波器带宽为必填项"
+
+      - field_id: oscilloscope.sample_rate
+        label_cn: "采样率"
+        priority: P0
+        required_for: ["oscilloscope"]
+        type: "text"
+        keywords_cn: ["采样率", "采样", "GSa/s", "MSa/s"]
+        validation:
+          not_empty: true
+          message_cn: "采样率为必填项"
+
+      - field_id: oscilloscope.channels
+        label_cn: "通道数"
+        priority: P1
+        required_for: ["oscilloscope"]
+        type: "integer"
+        keywords_cn: ["通道", "通道数"]
+        validation:
+          min_value: 1
+          message_cn: "建议明确通道数"
+
+      - field_id: oscilloscope.memory_depth
+        label_cn: "存储深度"
+        priority: P2
+        required_for: ["oscilloscope"]
+        type: "text"
+        keywords_cn: ["存储深度", "记录长度"]
+        validation:
+          message_cn: "建议明确存储深度"
+
+  - group_id: spectrum_specs
+    group_label_cn: "频谱仪规格"
+    items:
+      - field_id: spectrum.frequency_range
+        label_cn: "频率范围"
+        priority: P0
+        required_for: ["spectrum_analyzer"]
+        type: "text"
+        keywords_cn: ["频率范围", "工作频率", "频率"]
+        validation:
+          not_empty: true
+          message_cn: "频率范围为必填项"
+
+      - field_id: spectrum.danl
+        label_cn: "显示平均噪声电平"
+        priority: P1
+        required_for: ["spectrum_analyzer"]
+        type: "text"
+        keywords_cn: ["噪声电平", "DANL", "灵敏度"]
+        validation:
+          message_cn: "建议明确噪声电平"
+
+      - field_id: spectrum.rbw
+        label_cn: "分辨率带宽"
+        priority: P1
+        required_for: ["spectrum_analyzer"]
+        type: "text"
+        keywords_cn: ["分辨率带宽", "RBW"]
+        validation:
+          message_cn: "建议明确分辨率带宽"
+
+  - group_id: power_supply_specs
+    group_label_cn: "电源规格"
+    items:
+      - field_id: power.voltage_range
+        label_cn: "电压范围"
+        priority: P0
+        required_for: ["power_supply"]
+        type: "text"
+        keywords_cn: ["电压范围", "输出电压", "电压"]
+        validation:
+          not_empty: true
+          message_cn: "电压范围为必填项"
+
+      - field_id: power.current_range
+        label_cn: "电流范围"
+        priority: P0
+        required_for: ["power_supply"]
+        type: "text"
+        keywords_cn: ["电流范围", "输出电流", "电流"]
+        validation:
+          not_empty: true
+          message_cn: "电流范围为必填项"
+
+      - field_id: power.max_power
+        label_cn: "最大功率"
+        priority: P1
+        required_for: ["power_supply"]
+        type: "float"
+        unit: "W"
+        keywords_cn: ["功率", "最大功率", "输出功率"]
+        validation:
+          message_cn: "建议明确最大功率"
+
+      - field_id: power.channels
+        label_cn: "输出通道"
+        priority: P1
+        required_for: ["power_supply"]
+        type: "integer"
+        keywords_cn: ["通道", "输出通道", "路"]
+        validation:
+          message_cn: "建议明确输出通道数"
+
+  - group_id: multimeter_specs
+    group_label_cn: "万用表规格"
+    items:
+      - field_id: multimeter.display_digits
+        label_cn: "显示位数"
+        priority: P1
+        required_for: ["multimeter"]
+        type: "text"
+        keywords_cn: ["显示位数", "位数", "4位半", "5位半", "6位半"]
+        validation:
+          message_cn: "建议明确显示位数"
+
+      - field_id: multimeter.functions
+        label_cn: "测量功能"
+        priority: P1
+        required_for: ["multimeter"]
+        type: "text"
+        keywords_cn: ["测量功能", "电压", "电流", "电阻", "电容", "频率"]
+        validation:
+          message_cn: "建议明确测量功能"
+
+  - group_id: signal_gen_specs
+    group_label_cn: "信号源规格"
+    items:
+      - field_id: signal_gen.frequency_range
+        label_cn: "频率范围"
+        priority: P0
+        required_for: ["signal_generator"]
+        type: "text"
+        keywords_cn: ["频率范围", "输出频率"]
+        validation:
+          not_empty: true
+          message_cn: "频率范围为必填项"
+
+      - field_id: signal_gen.waveform_types
+        label_cn: "波形类型"
+        priority: P1
+        required_for: ["signal_generator"]
+        type: "text"
+        keywords_cn: ["波形", "正弦", "方波", "三角波", "任意波"]
+        validation:
+          message_cn: "建议明确波形类型"
+
+      - field_id: signal_gen.amplitude_range
+        label_cn: "幅度范围"
+        priority: P1
+        required_for: ["signal_generator"]
+        type: "text"
+        keywords_cn: ["幅度", "幅度范围", "输出幅度"]
+        validation:
+          message_cn: "建议明确幅度范围"
+
+  - group_id: interface
+    group_label_cn: "接口"
+    items:
+      - field_id: io.interface
+        label_cn: "通信接口"
+        priority: P2
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["接口", "USB", "LAN", "GPIB", "RS232"]
+        validation:
+          message_cn: "建议明确通信接口要求"
+
+  - group_id: acceptance_support
+    group_label_cn: "验收与服务"
+    items:
+      - field_id: acceptance.criteria
+        label_cn: "验收指标"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["验收", "测试", "校准"]
+        validation:
+          not_empty: true
+          message_cn: "验收指标为必填项"
+
+      - field_id: support.calibration
+        label_cn: "校准服务"
+        priority: P1
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["校准", "计量", "检定"]
+        validation:
+          message_cn: "建议明确校准服务要求"
+
+      - field_id: support.warranty
+        label_cn: "质保服务"
+        priority: P0
+        required_for: ["all"]
+        type: "text"
+        keywords_cn: ["质保", "保修", "售后服务"]
+        validation:
+          not_empty: true
+          message_cn: "质保服务为必填项"
+
+risk_rules:
+  - rule_id: risk.brand_directivity
+    priority: P0
+    description_cn: "检测到品牌指定"
+    trigger_patterns:
+      cn_keywords:
+        - "泰克"
+        - "Tektronix"
+        - "是德"
+        - "Keysight"
+        - "安捷伦"
+        - "Agilent"
+        - "罗德"
+        - "Rohde"
+        - "福禄克"
+        - "Fluke"
+    action:
+      report_message_cn: "存在品牌指向性，建议删除品牌名称"
+
+  - rule_id: risk.model_designation
+    priority: P0
+    description_cn: "检测到型号指定"
+    trigger_patterns:
+      regex:
+        - "(?i)\\b(DPO|MSO|DSA)\\s*\\d{4}\\b"
+        - "(?i)\\b(N\\d{4,5}|E\\d{4,5}|3\\d{4,5})\\b"
+        - "(?i)\\b(F\\d{4,5})\\b"
+    action:
+      report_message_cn: "检测到具体型号，建议改为性能参数描述"
