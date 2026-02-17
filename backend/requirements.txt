@@ -21,3 +21,8 @@ openai>=1.0.0
 # Time series prediction
 statsmodels>=0.14.0
 scipy>=1.9.0
+
+# Database and Authentication
+sqlalchemy==2.0.25
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4

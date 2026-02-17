@@ -34,10 +34,18 @@ async def health_check():
         }
     )
 
+# Database initialization
+from app.core.database import init_db
+
+@app.on_event("startup")
+async def startup_event():
+    init_db()
+
 # Import routes
-from app.api import requirements, price, contract, chat
+from app.api import requirements, price, contract, chat, auth
 
 # Register routes
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(requirements.router, prefix="/api", tags=["requirements"])
 app.include_router(price.router, prefix="/api", tags=["price"])
 app.include_router(contract.router, prefix="/api", tags=["contract"])
