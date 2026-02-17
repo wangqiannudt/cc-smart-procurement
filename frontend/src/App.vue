@@ -1,13 +1,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useResponsive, useAuth } from './composables'
+import { useResponsive, useAuth, useTheme } from './composables'
 import { ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
 
 const { user, isLoggedIn, logout, isAdmin } = useAuth()
+const { currentTheme, currentThemeId, availableThemes, setTheme } = useTheme()
 
 const baseMenuItems = [
   { path: '/', icon: 'DataAnalysis', title: '系统概览' },
@@ -30,6 +31,7 @@ const activeMenu = computed(() => route.path)
 // 使用 composable
 const { isMobile } = useResponsive(768)
 const drawerVisible = ref(false)
+const showThemePanel = ref(false)
 
 // 切换抽屉
 const toggleDrawer = () => {
@@ -65,6 +67,12 @@ const roleLabel = computed(() => {
   const labels = { handler: '承办人', processor: '经办人', admin: '管理员' }
   return labels[user.value?.role] || ''
 })
+
+// 主题切换
+const handleThemeChange = (themeId) => {
+  setTheme(themeId)
+  showThemePanel.value = false
+}
 </script>
 
 <template>
@@ -95,9 +103,6 @@ const roleLabel = computed(() => {
             :default-active="activeMenu"
             class="el-menu-vertical"
             @select="handleSelect"
-            text-color="#ffffff"
-            active-text-color="#409EFF"
-            background-color="#1a1a2e"
           >
             <el-menu-item
               v-for="item in menuItems"
@@ -108,18 +113,51 @@ const roleLabel = computed(() => {
               <span>{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
-          <!-- 用户信息区块 -->
-          <div class="user-info" v-if="isLoggedIn">
-            <div class="user-avatar">
-              <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+          <!-- 底部区域：主题切换 + 用户信息 -->
+          <div class="sidebar-bottom">
+            <!-- 主题切换 -->
+            <div class="theme-switcher">
+              <div class="theme-current" @click="showThemePanel = !showThemePanel">
+                <span class="theme-icon">{{ currentTheme.preview.icon }}</span>
+                <span class="theme-name">{{ currentTheme.name }}</span>
+                <el-icon class="theme-arrow" :class="{ 'is-open': showThemePanel }">
+                  <ArrowRight />
+                </el-icon>
+              </div>
+              <!-- 主题选择面板 -->
+              <transition name="theme-panel">
+                <div v-if="showThemePanel" class="theme-panel">
+                  <div
+                    v-for="theme in availableThemes"
+                    :key="theme.id"
+                    class="theme-option"
+                    :class="{ 'is-active': currentThemeId === theme.id }"
+                    @click="handleThemeChange(theme.id)"
+                  >
+                    <div class="theme-preview" :style="{ background: theme.preview.bg }">
+                      <div class="theme-dot" :style="{ background: theme.preview.color }"></div>
+                    </div>
+                    <div class="theme-info">
+                      <span class="theme-icon">{{ theme.preview.icon }}</span>
+                      <span class="theme-title">{{ theme.name }}</span>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </div>
-            <div class="user-detail">
-              <div class="username">{{ user?.username }}</div>
-              <div class="role">{{ roleLabel }}</div>
+            <!-- 用户信息 -->
+            <div class="user-info" v-if="isLoggedIn">
+              <div class="user-avatar">
+                <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+              </div>
+              <div class="user-detail">
+                <div class="username">{{ user?.username }}</div>
+                <div class="role">{{ roleLabel }}</div>
+              </div>
+              <el-button type="danger" text @click="handleLogout">
+                退出
+              </el-button>
             </div>
-            <el-button type="danger" text @click="handleLogout">
-              退出
-            </el-button>
           </div>
         </div>
       </el-aside>
@@ -141,9 +179,6 @@ const roleLabel = computed(() => {
             :default-active="activeMenu"
             class="el-menu-vertical"
             @select="handleSelect"
-            text-color="#ffffff"
-            active-text-color="#409EFF"
-            background-color="#1a1a2e"
           >
             <el-menu-item
               v-for="item in menuItems"
@@ -154,18 +189,50 @@ const roleLabel = computed(() => {
               <span>{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
-          <!-- 用户信息区块 -->
-          <div class="user-info" v-if="isLoggedIn">
-            <div class="user-avatar">
-              <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+          <!-- 底部区域 -->
+          <div class="sidebar-bottom">
+            <!-- 主题切换 -->
+            <div class="theme-switcher">
+              <div class="theme-current" @click="showThemePanel = !showThemePanel">
+                <span class="theme-icon">{{ currentTheme.preview.icon }}</span>
+                <span class="theme-name">{{ currentTheme.name }}</span>
+                <el-icon class="theme-arrow" :class="{ 'is-open': showThemePanel }">
+                  <ArrowRight />
+                </el-icon>
+              </div>
+              <transition name="theme-panel">
+                <div v-if="showThemePanel" class="theme-panel">
+                  <div
+                    v-for="theme in availableThemes"
+                    :key="theme.id"
+                    class="theme-option"
+                    :class="{ 'is-active': currentThemeId === theme.id }"
+                    @click="handleThemeChange(theme.id)"
+                  >
+                    <div class="theme-preview" :style="{ background: theme.preview.bg }">
+                      <div class="theme-dot" :style="{ background: theme.preview.color }"></div>
+                    </div>
+                    <div class="theme-info">
+                      <span class="theme-icon">{{ theme.preview.icon }}</span>
+                      <span class="theme-title">{{ theme.name }}</span>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </div>
-            <div class="user-detail">
-              <div class="username">{{ user?.username }}</div>
-              <div class="role">{{ roleLabel }}</div>
+            <!-- 用户信息 -->
+            <div class="user-info" v-if="isLoggedIn">
+              <div class="user-avatar">
+                <el-avatar :size="40">{{ user?.username?.charAt(0)?.toUpperCase() }}</el-avatar>
+              </div>
+              <div class="user-detail">
+                <div class="username">{{ user?.username }}</div>
+                <div class="role">{{ roleLabel }}</div>
+              </div>
+              <el-button type="danger" text @click="handleLogout">
+                退出
+              </el-button>
             </div>
-            <el-button type="danger" text @click="handleLogout">
-              退出
-            </el-button>
           </div>
         </div>
       </el-drawer>
@@ -188,7 +255,7 @@ const roleLabel = computed(() => {
 <style scoped>
 .app-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  background: var(--bg-gradient);
 }
 
 .el-container {
@@ -202,26 +269,26 @@ const roleLabel = computed(() => {
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  background: var(--bg-gradient-vertical);
   display: flex;
   align-items: center;
   padding: 0 16px;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .hamburger-btn {
-  background: rgba(64, 158, 255, 0.15) !important;
-  border: 1px solid rgba(64, 158, 255, 0.3) !important;
-  color: #409EFF !important;
+  background: var(--color-primary-bg) !important;
+  border: 1px solid var(--color-primary-border) !important;
+  color: var(--color-primary) !important;
 }
 
 .hamburger-btn:hover {
-  background: rgba(64, 158, 255, 0.25) !important;
+  background: var(--color-primary-border) !important;
 }
 
 .mobile-title {
-  color: #409EFF;
+  color: var(--color-primary);
   font-size: 18px;
   margin-left: 16px;
   font-weight: 600;
@@ -229,10 +296,10 @@ const roleLabel = computed(() => {
 
 .sidebar {
   height: 100vh;
-  background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.15);
   position: relative;
 }
 
@@ -243,11 +310,11 @@ const roleLabel = computed(() => {
 .logo {
   padding: 30px 20px;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .logo h2 {
-  color: #409EFF;
+  color: var(--color-primary);
   font-size: 20px;
   margin: 0 0 5px 0;
   font-weight: 600;
@@ -255,7 +322,7 @@ const roleLabel = computed(() => {
 }
 
 .logo p {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 12px;
   margin: 0;
 }
@@ -268,20 +335,20 @@ const roleLabel = computed(() => {
 
 .el-menu-item {
   margin: 6px 18px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: all 0.3s ease;
   border: 1px solid transparent;
 }
 
 .el-menu-item:hover {
-  background: rgba(64, 158, 255, 0.12) !important;
+  background: var(--color-primary-bg) !important;
   transform: translateX(4px);
 }
 
 .el-menu-item.is-active {
-  background: linear-gradient(90deg, rgba(64, 158, 255, 0.35) 0%, rgba(64, 158, 255, 0.15) 100%) !important;
-  border-color: rgba(64, 158, 255, 0.3);
-  box-shadow: 0 0 15px rgba(64, 158, 255, 0.2);
+  background: linear-gradient(90deg, var(--color-primary-border) 0%, var(--color-primary-bg) 100%) !important;
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-glow);
 }
 
 .el-icon {
@@ -303,28 +370,146 @@ const roleLabel = computed(() => {
   min-height: 100vh;
 }
 
-/* 用户信息区块 */
-.user-info {
+/* 底部区域 */
+.sidebar-bottom {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+/* 主题切换器 */
+.theme-switcher {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.theme-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-current:hover {
+  background: var(--bg-card-hover);
+}
+
+.theme-current .theme-icon {
+  font-size: 18px;
+}
+
+.theme-current .theme-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.theme-current .theme-arrow {
+  transition: transform 0.3s ease;
+  color: var(--text-muted);
+}
+
+.theme-current .theme-arrow.is-open {
+  transform: rotate(90deg);
+}
+
+/* 主题选择面板 */
+.theme-panel {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.theme-option:hover {
+  background: var(--bg-card-hover);
+}
+
+.theme-option.is-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.theme-preview {
+  width: 32px;
+  height: 24px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.theme-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  right: 4px;
+  bottom: 4px;
+}
+
+.theme-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-info .theme-icon {
+  font-size: 14px;
+}
+
+.theme-title {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+/* 主题面板动画 */
+.theme-panel-enter-active,
+.theme-panel-leave-active {
+  transition: all 0.25s ease;
+}
+
+.theme-panel-enter-from,
+.theme-panel-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* 用户信息区块 */
+.user-info {
   padding: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
 }
 .user-detail {
   flex: 1;
 }
 .username {
-  color: #fff;
+  color: var(--text-primary);
   font-size: 14px;
 }
 .role {
-  color: #909399;
+  color: var(--text-muted);
   font-size: 12px;
 }
 
@@ -352,7 +537,7 @@ const roleLabel = computed(() => {
 :deep(.mobile-drawer) {
   .el-drawer__body {
     padding: 0;
-    background: #1a1a2e;
+    background: var(--sidebar-bg);
   }
 }
 

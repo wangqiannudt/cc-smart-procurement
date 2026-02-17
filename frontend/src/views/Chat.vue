@@ -148,9 +148,9 @@ onMounted(() => {
   height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-card);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .chat-header {
@@ -158,20 +158,20 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-color);
   background: rgba(64, 158, 255, 0.05);
   border-radius: 16px 16px 0 0;
 }
 
 .header-info h2 {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 22px;
   margin: 0 0 5px 0;
   font-weight: 600;
 }
 
 .header-info p {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 13px;
   margin: 0;
 }
@@ -231,10 +231,10 @@ onMounted(() => {
 
 .message-content {
   max-width: 70%;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 15px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .message.user .message-content {
@@ -256,12 +256,12 @@ onMounted(() => {
 }
 
 .message-time {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   font-size: 12px;
 }
 
 .message-text {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-size: 14px;
   line-height: 1.6;
 }
@@ -277,7 +277,7 @@ onMounted(() => {
   gap: 8px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-color);
 }
 
 /* Typing Indicator */
@@ -315,16 +315,16 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   padding: 15px 25px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color-light);
   overflow-x: auto;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .quick-actions .el-button {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
 }
 
 .quick-actions .el-button:hover {
@@ -338,7 +338,7 @@ onMounted(() => {
   display: flex;
   gap: 12px;
   padding: 20px 25px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-color);
   background: rgba(0, 0, 0, 0.2);
   border-radius: 0 0 16px 16px;
 }
@@ -348,9 +348,9 @@ onMounted(() => {
 }
 
 .input-area :deep(.el-textarea__inner) {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   border-radius: 12px;
   resize: none;
 }
@@ -361,7 +361,7 @@ onMounted(() => {
 }
 
 .input-area :deep(.el-textarea__inner::placeholder) {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 .input-area .el-button {

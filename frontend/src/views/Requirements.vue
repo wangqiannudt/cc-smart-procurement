@@ -608,30 +608,30 @@ const groupedFields = computed(() => {
 }
 
 .page-header h1 {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 28px;
   margin: 0 0 8px 0;
   font-weight: 600;
 }
 
 .page-header p {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
 }
 
 /* 输入面板 */
 .input-panel {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   margin-bottom: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .input-panel.collapsed {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
 }
 
 .panel-header {
@@ -640,12 +640,12 @@ const groupedFields = computed(() => {
   align-items: center;
   padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-color-light);
   transition: background 0.2s;
 }
 
 .panel-header:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card-hover);
 }
 
 .header-left {
@@ -655,7 +655,7 @@ const groupedFields = computed(() => {
 }
 
 .toggle-icon {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   transition: transform 0.3s;
 }
 
@@ -664,7 +664,7 @@ const groupedFields = computed(() => {
 }
 
 .panel-title {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 15px;
   font-weight: 500;
 }
@@ -682,7 +682,7 @@ const groupedFields = computed(() => {
 }
 
 .category-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-size: 14px;
   white-space: nowrap;
 }
@@ -723,16 +723,16 @@ const groupedFields = computed(() => {
 }
 
 .text-input :deep(.el-textarea__inner) {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .text-input :deep(.el-textarea__inner::placeholder) {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 .text-input :deep(.el-textarea__inner:focus) {
@@ -756,7 +756,7 @@ const groupedFields = computed(() => {
 }
 
 .upload-drag :deep(.el-upload__text) {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
@@ -765,7 +765,7 @@ const groupedFields = computed(() => {
 }
 
 .upload-drag :deep(.el-upload__tip) {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   font-size: 12px;
 }
 
@@ -796,9 +796,9 @@ const groupedFields = computed(() => {
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   margin-bottom: 20px;
 }
 
@@ -836,7 +836,7 @@ const groupedFields = computed(() => {
 }
 
 .score-label {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 11px;
   margin-top: 4px;
 }
@@ -873,7 +873,7 @@ const groupedFields = computed(() => {
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: 8px;
 }
 
@@ -899,12 +899,12 @@ const groupedFields = computed(() => {
 .stat-value {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .stat-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }
 
 /* 结果内容区 */
@@ -915,9 +915,9 @@ const groupedFields = computed(() => {
 }
 
 .result-section {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-card);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -926,8 +926,8 @@ const groupedFields = computed(() => {
   align-items: center;
   gap: 8px;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  border-bottom: 1px solid var(--border-color-light);
+  color: var(--text-primary);
   font-size: 15px;
   font-weight: 500;
 }
@@ -954,7 +954,7 @@ const groupedFields = computed(() => {
 
 .field-card {
   padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: 8px;
   border-left: 3px solid #409EFF;
 }
@@ -967,13 +967,13 @@ const groupedFields = computed(() => {
 }
 
 .field-label {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 500;
 }
 
 .field-value {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-size: 12px;
   word-break: break-all;
   line-height: 1.4;
@@ -990,7 +990,7 @@ const groupedFields = computed(() => {
 }
 
 .suggestions-box, .issues-box, .risk-box {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -1000,8 +1000,8 @@ const groupedFields = computed(() => {
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.02);
-  color: #ffffff;
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
 }
@@ -1032,7 +1032,7 @@ const groupedFields = computed(() => {
 }
 
 .suggestion-item span {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -1041,7 +1041,7 @@ const groupedFields = computed(() => {
 .issues-tabs :deep(.el-tabs__header) {
   margin: 0;
   padding: 0 12px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-card-hover);
 }
 
 .issues-tabs :deep(.el-tabs__nav-wrap::after) {
@@ -1049,7 +1049,7 @@ const groupedFields = computed(() => {
 }
 
 .issues-tabs :deep(.el-tabs__item) {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 13px;
 }
 
@@ -1068,7 +1068,7 @@ const groupedFields = computed(() => {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: 6px;
   margin-bottom: 6px;
   cursor: pointer;
@@ -1076,7 +1076,7 @@ const groupedFields = computed(() => {
 }
 
 .issue-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-card-hover);
 }
 
 .issue-icon {
@@ -1099,7 +1099,7 @@ const groupedFields = computed(() => {
 }
 
 .issue-message {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 13px;
   margin-bottom: 2px;
   white-space: nowrap;
@@ -1108,7 +1108,7 @@ const groupedFields = computed(() => {
 }
 
 .issue-suggestion {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
@@ -1116,7 +1116,7 @@ const groupedFields = computed(() => {
 }
 
 .issue-arrow {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -1133,7 +1133,7 @@ const groupedFields = computed(() => {
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: 6px;
 }
 
@@ -1147,7 +1147,7 @@ const groupedFields = computed(() => {
 .risk-level.p2 { color: #409EFF; }
 
 .risk-count {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
@@ -1158,7 +1158,7 @@ const groupedFields = computed(() => {
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 .empty-icon {
@@ -1179,14 +1179,14 @@ const groupedFields = computed(() => {
 }
 
 .detail-row .label {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
   font-size: 13px;
   min-width: 70px;
 }
 
 .detail-row .value {
   flex: 1;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 13px;
   line-height: 1.6;
 }
@@ -1197,37 +1197,37 @@ const groupedFields = computed(() => {
 
 :deep(.el-dialog) {
   background: rgba(26, 26, 46, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
 }
 
 :deep(.el-dialog__header) {
-  color: #ffffff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color-light);
   padding: 16px 20px;
   margin: 0;
 }
 
 :deep(.el-dialog__title) {
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 :deep(.el-dialog__body) {
-  color: #ffffff;
+  color: var(--text-primary);
   padding: 20px;
 }
 
 :deep(.el-dialog__close) {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }
 
 :deep(.el-dialog__close:hover) {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 :deep(.el-empty__description) {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 /* 响应式 */

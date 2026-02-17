@@ -80,27 +80,28 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  background: var(--bg-gradient);
 }
 .login-card {
   width: 400px;
   padding: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
   backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
 }
 .title {
   text-align: center;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 30px;
   font-size: 24px;
 }
 .footer {
   text-align: center;
-  color: #909399;
+  color: var(--text-muted);
   margin-top: 20px;
 }
 .footer a {
-  color: #409eff;
+  color: var(--color-primary);
 }
 </style>

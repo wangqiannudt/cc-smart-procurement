@@ -1,0 +1,739 @@
+/**
+ * 多风格主题变量定义
+ * 支持三套风格：深邃星空(default)、HuggingFace、Apple
+ */
+
+/* ============================================
+   默认主题：深邃星空（深色科技风）
+   ============================================ */
+:root,
+[data-theme="default"] {
+  /* 模式标识 */
+  --theme-mode: 'dark';
+
+  /* 背景系 */
+  --bg-primary: #0f0f1a;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16213e;
+  --bg-gradient: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  --bg-gradient-vertical: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  --bg-card: rgba(26, 26, 46, 0.6);
+  --bg-card-hover: rgba(22, 33, 62, 0.8);
+  --bg-input: rgba(26, 26, 46, 0.8);
+  --bg-mask: rgba(15, 15, 26, 0.9);
+
+  /* 文字系 */
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: #909399;
+  --text-link: #409EFF;
+  --text-link-hover: #66b1ff;
+
+  /* 主色系 */
+  --color-primary: #409EFF;
+  --color-primary-light: #66b1ff;
+  --color-primary-dark: #337ecc;
+  --color-primary-bg: rgba(64, 158, 255, 0.15);
+  --color-primary-border: rgba(64, 158, 255, 0.3);
+
+  /* 功能色 */
+  --color-success: #67c23a;
+  --color-warning: #e6a23c;
+  --color-danger: #f56c6c;
+  --color-info: #909399;
+
+  /* 边框系 */
+  --border-color: rgba(64, 158, 255, 0.2);
+  --border-color-light: rgba(64, 158, 255, 0.1);
+  --border-color-dark: rgba(0, 0, 0, 0.2);
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* 阴影 */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-card: 2px 0 10px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 15px rgba(64, 158, 255, 0.2);
+
+  /* 侧边栏 */
+  --sidebar-bg: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  --sidebar-width: 240px;
+  --sidebar-text: #ffffff;
+  --sidebar-active-text: #409EFF;
+
+  /* 滚动条 */
+  --scrollbar-track: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb: rgba(64, 158, 255, 0.3);
+  --scrollbar-thumb-hover: rgba(64, 158, 255, 0.5);
+
+  /* Element Plus 覆盖 */
+  --el-bg-color: var(--bg-secondary);
+  --el-bg-color-page: var(--bg-primary);
+  --el-bg-color-overlay: var(--bg-card);
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-primary);
+  --el-text-color-secondary: var(--text-secondary);
+  --el-text-color-placeholder: var(--text-muted);
+  --el-color-primary: var(--color-primary);
+  --el-color-primary-light-3: var(--color-primary-light);
+  --el-color-primary-light-5: var(--color-primary-bg);
+  --el-color-primary-light-7: var(--color-primary-border);
+  --el-border-color: var(--border-color);
+  --el-border-color-light: var(--border-color-light);
+  --el-border-color-lighter: var(--border-color-light);
+  --el-fill-color: var(--bg-card);
+  --el-fill-color-light: var(--bg-card-hover);
+  --el-fill-color-lighter: var(--bg-card);
+  --el-fill-color-blank: transparent;
+  --el-mask-color: var(--bg-mask);
+}
+
+/* ============================================
+   深色主题（深邃星空）Element Plus 组件覆盖
+   ============================================ */
+
+/* 深色模式下的卡片样式 */
+:root .el-card,
+[data-theme="default"] .el-card {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* 深色模式下的输入框样式 */
+:root .el-input__wrapper,
+[data-theme="default"] .el-input__wrapper {
+  background-color: var(--bg-input) !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+
+:root .el-input__wrapper:hover,
+[data-theme="default"] .el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--border-color-dark) inset !important;
+}
+
+:root .el-input__wrapper.is-focus,
+[data-theme="default"] .el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--color-primary) inset !important;
+}
+
+/* 深色模式下的按钮样式 */
+:root .el-button,
+[data-theme="default"] .el-button {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+:root .el-button:hover,
+[data-theme="default"] .el-button:hover {
+  background-color: var(--bg-card-hover) !important;
+  border-color: var(--color-primary-border) !important;
+}
+
+:root .el-button--primary,
+[data-theme="default"] .el-button--primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+:root .el-button--primary:hover,
+[data-theme="default"] .el-button--primary:hover {
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%) !important;
+}
+
+/* 深色模式下的标签样式 */
+:root .el-tag,
+[data-theme="default"] .el-tag {
+  background-color: var(--color-primary-bg) !important;
+  border-color: var(--color-primary-border) !important;
+  color: var(--color-primary) !important;
+}
+
+:root .el-tag--success,
+[data-theme="default"] .el-tag--success {
+  background-color: rgba(103, 194, 58, 0.15) !important;
+  border-color: rgba(103, 194, 58, 0.3) !important;
+  color: var(--color-success) !important;
+}
+
+:root .el-tag--warning,
+[data-theme="default"] .el-tag--warning {
+  background-color: rgba(230, 162, 60, 0.15) !important;
+  border-color: rgba(230, 162, 60, 0.3) !important;
+  color: var(--color-warning) !important;
+}
+
+:root .el-tag--danger,
+[data-theme="default"] .el-tag--danger {
+  background-color: rgba(245, 108, 108, 0.15) !important;
+  border-color: rgba(245, 108, 108, 0.3) !important;
+  color: var(--color-danger) !important;
+}
+
+:root .el-tag--info,
+[data-theme="default"] .el-tag--info {
+  background-color: rgba(144, 147, 153, 0.15) !important;
+  border-color: rgba(144, 147, 153, 0.3) !important;
+  color: var(--color-info) !important;
+}
+
+/* 深色模式下的表格样式 */
+:root .el-table,
+[data-theme="default"] .el-table {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+:root .el-table th.el-table__cell,
+[data-theme="default"] .el-table th.el-table__cell {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+:root .el-table tr,
+[data-theme="default"] .el-table tr {
+  background-color: transparent !important;
+}
+
+:root .el-table td.el-table__cell,
+[data-theme="default"] .el-table td.el-table__cell {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+:root .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+[data-theme="default"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background-color: var(--bg-card) !important;
+}
+
+:root .el-table__body tr:hover > td.el-table__cell,
+[data-theme="default"] .el-table__body tr:hover > td.el-table__cell {
+  background-color: var(--bg-card-hover) !important;
+}
+
+/* 深色模式下的空状态 */
+:root .el-table__empty-text,
+[data-theme="default"] .el-table__empty-text {
+  color: var(--text-muted) !important;
+}
+
+/* 深色模式下的选择器 */
+:root .el-select__wrapper,
+[data-theme="default"] .el-select__wrapper {
+  background-color: var(--bg-input) !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+
+:root .el-select-dropdown,
+[data-theme="default"] .el-select-dropdown {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+:root .el-select-dropdown__item,
+[data-theme="default"] .el-select-dropdown__item {
+  color: var(--text-primary) !important;
+}
+
+:root .el-select-dropdown__item:hover,
+[data-theme="default"] .el-select-dropdown__item:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+:root .el-select-dropdown__item.is-selected,
+[data-theme="default"] .el-select-dropdown__item.is-selected {
+  color: var(--color-primary) !important;
+  background-color: var(--color-primary-bg) !important;
+}
+
+/* 深色模式下的弹出框 */
+:root .el-popper,
+[data-theme="default"] .el-popper {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* 深色模式下的对话框 */
+:root .el-dialog,
+[data-theme="default"] .el-dialog {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+:root .el-dialog__title,
+[data-theme="default"] .el-dialog__title {
+  color: var(--text-primary) !important;
+}
+
+:root .el-dialog__body,
+[data-theme="default"] .el-dialog__body {
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的表单 */
+:root .el-form-item__label,
+[data-theme="default"] .el-form-item__label {
+  color: var(--text-secondary) !important;
+}
+
+/* 深色模式下的分页 */
+:root .el-pagination,
+[data-theme="default"] .el-pagination {
+  --el-pagination-bg-color: var(--bg-card) !important;
+  --el-pagination-text-color: var(--text-primary) !important;
+  --el-pagination-button-disabled-bg-color: var(--bg-card) !important;
+}
+
+:root .el-pagination button,
+[data-theme="default"] .el-pagination button {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+:root .el-pager li,
+[data-theme="default"] .el-pager li {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+:root .el-pager li.is-active,
+[data-theme="default"] .el-pager li.is-active {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+}
+
+/* 深色模式下的开关 */
+:root .el-switch,
+[data-theme="default"] .el-switch {
+  --el-switch-off-color: var(--bg-tertiary) !important;
+}
+
+/* 深色模式下的单选框 */
+:root .el-radio__input.is-checked .el-radio__inner,
+[data-theme="default"] .el-radio__input.is-checked .el-radio__inner {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+:root .el-radio__input.is-checked + .el-radio__label,
+[data-theme="default"] .el-radio__input.is-checked + .el-radio__label {
+  color: var(--color-primary) !important;
+}
+
+:root .el-radio__label,
+[data-theme="default"] .el-radio__label {
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的复选框 */
+:root .el-checkbox__input.is-checked .el-checkbox__inner,
+[data-theme="default"] .el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+:root .el-checkbox__label,
+[data-theme="default"] .el-checkbox__label {
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的头像 */
+:root .el-avatar,
+[data-theme="default"] .el-avatar {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+}
+
+/* 深色模式下的消息提示 */
+:root .el-message,
+[data-theme="default"] .el-message {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+:root .el-message--success,
+[data-theme="default"] .el-message--success {
+  background: linear-gradient(135deg, rgba(103, 194, 58, 0.2) 0%, var(--bg-secondary) 100%) !important;
+  border-color: var(--color-success) !important;
+}
+
+:root .el-message--warning,
+[data-theme="default"] .el-message--warning {
+  background: linear-gradient(135deg, rgba(230, 162, 60, 0.2) 0%, var(--bg-secondary) 100%) !important;
+  border-color: var(--color-warning) !important;
+}
+
+:root .el-message--error,
+[data-theme="default"] .el-message--error {
+  background: linear-gradient(135deg, #2a1a1a 0%, #1a1a2e 100%) !important;
+  border: 1px solid rgba(245, 108, 108, 0.3) !important;
+}
+
+/* 深色模式下的上传组件 */
+:root .el-upload-dragger,
+[data-theme="default"] .el-upload-dragger {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+:root .el-upload-dragger:hover,
+[data-theme="default"] .el-upload-dragger:hover {
+  border-color: var(--color-primary) !important;
+}
+
+:root .el-upload__text,
+[data-theme="default"] .el-upload__text {
+  color: var(--text-secondary) !important;
+}
+
+:root .el-upload__tip,
+[data-theme="default"] .el-upload__tip {
+  color: var(--text-muted) !important;
+}
+
+/* 深色模式下的进度条 */
+:root .el-progress-bar__outer,
+[data-theme="default"] .el-progress-bar__outer {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* 深色模式下的分割线 */
+:root .el-divider,
+[data-theme="default"] .el-divider {
+  border-color: var(--border-color) !important;
+}
+
+/* 深色模式下的文字颜色 */
+:root .el-text,
+[data-theme="default"] .el-text {
+  color: var(--text-primary) !important;
+}
+
+:root .el-text--primary,
+[data-theme="default"] .el-text--primary {
+  color: var(--color-primary) !important;
+}
+
+:root .el-text--success,
+[data-theme="default"] .el-text--success {
+  color: var(--color-success) !important;
+}
+
+:root .el-text--warning,
+[data-theme="default"] .el-text--warning {
+  color: var(--color-warning) !important;
+}
+
+:root .el-text--danger,
+[data-theme="default"] .el-text--danger {
+  color: var(--color-danger) !important;
+}
+
+:root .el-text--info,
+[data-theme="default"] .el-text--info {
+  color: var(--color-info) !important;
+}
+
+/* ============================================
+   Nord 风格（北欧冷调）
+   ============================================ */
+[data-theme="nord"] {
+  /* 模式标识 */
+  --theme-mode: 'light';
+
+  /* 背景系 - Nord 雪白/冰灰 */
+  --bg-primary: #ECEFF4;
+  --bg-secondary: #E5E9F0;
+  --bg-tertiary: #D8DEE9;
+  --bg-gradient: #ECEFF4;
+  --bg-gradient-vertical: linear-gradient(180deg, #ECEFF4 0%, #E5E9F0 100%);
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #E5E9F0;
+  --bg-input: #FFFFFF;
+  --bg-mask: rgba(236, 239, 244, 0.95);
+
+  /* 文字系 - Nord 深蓝灰 */
+  --text-primary: #2E3440;
+  --text-secondary: #4C566A;
+  --text-muted: #81A1C1;
+  --text-link: #5E81AC;
+  --text-link-hover: #81A1C1;
+
+  /* 主色系 - Nord 极地蓝 */
+  --color-primary: #5E81AC;
+  --color-primary-light: #81A1C1;
+  --color-primary-dark: #4C566A;
+  --color-primary-bg: rgba(94, 129, 172, 0.1);
+  --color-primary-border: rgba(94, 129, 172, 0.3);
+
+  /* 功能色 - Nord 极光色 */
+  --color-success: #A3BE8C;
+  --color-warning: #EBCB8B;
+  --color-danger: #BF616A;
+  --color-info: #B48EAD;
+
+  /* 边框系 - Nord 霜灰 */
+  --border-color: #D8DEE9;
+  --border-color-light: #E5E9F0;
+  --border-color-dark: #4C566A;
+
+  /* 圆角 - 中等 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* 阴影 - 极轻柔 */
+  --shadow-sm: 0 2px 6px rgba(46, 52, 64, 0.04);
+  --shadow-md: 0 4px 12px rgba(46, 52, 64, 0.06);
+  --shadow-lg: 0 8px 20px rgba(46, 52, 64, 0.08);
+  --shadow-card: 0 2px 10px rgba(46, 52, 64, 0.06);
+  --shadow-glow: 0 0 20px rgba(94, 129, 172, 0.15);
+
+  /* 侧边栏 */
+  --sidebar-bg: #E5E9F0;
+  --sidebar-width: 240px;
+  --sidebar-text: #2E3440;
+  --sidebar-active-text: #5E81AC;
+
+  /* 滚动条 */
+  --scrollbar-track: #E5E9F0;
+  --scrollbar-thumb: #81A1C1;
+  --scrollbar-thumb-hover: #5E81AC;
+
+  /* Element Plus 覆盖 - Nord 风格 */
+  --el-bg-color: #FFFFFF;
+  --el-bg-color-page: #ECEFF4;
+  --el-bg-color-overlay: #FFFFFF;
+  --el-text-color-primary: #2E3440;
+  --el-text-color-regular: #3B4252;
+  --el-text-color-secondary: #4C566A;
+  --el-text-color-placeholder: #81A1C1;
+  --el-color-primary: #5E81AC;
+  --el-color-primary-light-3: #81A1C1;
+  --el-color-primary-light-5: rgba(94, 129, 172, 0.15);
+  --el-color-primary-light-7: rgba(94, 129, 172, 0.1);
+  --el-border-color: #D8DEE9;
+  --el-border-color-light: #E5E9F0;
+  --el-border-color-lighter: #ECEFF4;
+  --el-fill-color: #E5E9F0;
+  --el-fill-color-light: #ECEFF4;
+  --el-fill-color-lighter: #F5F7FA;
+  --el-fill-color-blank: #FFFFFF;
+  --el-mask-color: rgba(236, 239, 244, 0.9);
+}
+
+/* Nord 特殊样式 */
+[data-theme="nord"] .el-button--primary {
+  background: #5E81AC !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="nord"] .el-button--primary:hover {
+  background: #81A1C1 !important;
+}
+
+/* ============================================
+   Apple 风格（极简高端）
+   ============================================ */
+[data-theme="apple"] {
+  /* 模式标识 */
+  --theme-mode: 'light';
+
+  /* 背景系 */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FBFBFD;
+  --bg-tertiary: #F5F5F7;
+  --bg-gradient: #FFFFFF;
+  --bg-gradient-vertical: linear-gradient(180deg, #FFFFFF 0%, #FBFBFD 100%);
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F5F5F7;
+  --bg-input: #FFFFFF;
+  --bg-mask: rgba(255, 255, 255, 0.97);
+
+  /* 文字系 - Apple 黑灰 */
+  --text-primary: #1D1D1F;
+  --text-secondary: #424245;
+  --text-muted: #86868B;
+  --text-link: #0066CC;
+  --text-link-hover: #0071E3;
+
+  /* 主色系 - Apple 蓝 */
+  --color-primary: #0066CC;
+  --color-primary-light: #0071E3;
+  --color-primary-dark: #004999;
+  --color-primary-bg: rgba(0, 102, 204, 0.08);
+  --color-primary-border: rgba(0, 102, 204, 0.2);
+
+  /* 功能色 */
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-danger: #FF3B30;
+  --color-info: #8E8E93;
+
+  /* 边框系 */
+  --border-color: #D2D2D7;
+  --border-color-light: #E8E8ED;
+  --border-color-dark: #C7C7CC;
+
+  /* 圆角 - 大圆角 */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  /* 阴影 - 精致 */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 30px rgba(0, 102, 204, 0.15);
+
+  /* 侧边栏 */
+  --sidebar-bg: #FBFBFD;
+  --sidebar-width: 240px;
+  --sidebar-text: #1D1D1F;
+  --sidebar-active-text: #0066CC;
+
+  /* 滚动条 */
+  --scrollbar-track: #F5F5F7;
+  --scrollbar-thumb: #C7C7CC;
+  --scrollbar-thumb-hover: #8E8E93;
+
+  /* Element Plus 覆盖 - Apple 风格 */
+  --el-bg-color: #FFFFFF;
+  --el-bg-color-page: #FBFBFD;
+  --el-bg-color-overlay: #FFFFFF;
+  --el-text-color-primary: #1D1D1F;
+  --el-text-color-regular: #424245;
+  --el-text-color-secondary: #6E6E73;
+  --el-text-color-placeholder: #86868B;
+  --el-color-primary: #0066CC;
+  --el-color-primary-light-3: #0071E3;
+  --el-color-primary-light-5: rgba(0, 102, 204, 0.15);
+  --el-color-primary-light-7: rgba(0, 102, 204, 0.1);
+  --el-border-color: #D2D2D7;
+  --el-border-color-light: #E8E8ED;
+  --el-border-color-lighter: #F5F5F7;
+  --el-fill-color: #F5F5F7;
+  --el-fill-color-light: #E8E8ED;
+  --el-fill-color-lighter: #F5F5F7;
+  --el-fill-color-blank: #FFFFFF;
+  --el-mask-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Apple 特殊样式 - 极简按钮 */
+[data-theme="apple"] .el-button--primary {
+  background: #0066CC !important;
+  border: none !important;
+  border-radius: 980px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+}
+
+[data-theme="apple"] .el-button--primary:hover {
+  background: #0071E3 !important;
+}
+
+/* ============================================
+   通用主题适配
+   ============================================ */
+
+/* 根据主题模式调整字体 */
+[data-theme="apple"] {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+[data-theme="nord"] {
+  font-family: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 浅色模式下的输入框样式 */
+[data-theme="nord"] .el-input__wrapper,
+[data-theme="apple"] .el-input__wrapper {
+  background-color: var(--bg-input) !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+
+[data-theme="nord"] .el-input__wrapper:hover,
+[data-theme="apple"] .el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--border-color-dark) inset !important;
+}
+
+[data-theme="nord"] .el-input__wrapper.is-focus,
+[data-theme="apple"] .el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 2px var(--color-primary) inset !important;
+}
+
+/* 浅色模式下的卡片样式 */
+[data-theme="nord"] .el-card,
+[data-theme="apple"] .el-card {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* 浅色模式下的消息提示 */
+[data-theme="nord"] .el-message--error,
+[data-theme="apple"] .el-message--error {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--color-danger) !important;
+}
+
+/* 浅色模式下的Loading遮罩 */
+[data-theme="nord"] .el-loading-mask,
+[data-theme="apple"] .el-loading-mask {
+  background-color: var(--bg-mask) !important;
+}
+
+/* 浅色模式下的菜单样式 */
+[data-theme="nord"] .el-menu,
+[data-theme="apple"] .el-menu {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+[data-theme="nord"] .el-menu-item,
+[data-theme="apple"] .el-menu-item {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="nord"] .el-menu-item:hover,
+[data-theme="apple"] .el-menu-item:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+[data-theme="nord"] .el-menu-item.is-active,
+[data-theme="apple"] .el-menu-item.is-active {
+  color: var(--sidebar-active-text) !important;
+  background-color: var(--color-primary-bg) !important;
+}
+
+/* 浅色模式下的抽屉 */
+[data-theme="nord"] .el-drawer__body,
+[data-theme="apple"] .el-drawer__body {
+  background-color: var(--sidebar-bg) !important;
+}
+
+/* 浅色模式下的单选框 */
+[data-theme="nord"] .el-radio__input.is-checked .el-radio__inner,
+[data-theme="apple"] .el-radio__input.is-checked .el-radio__inner {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+[data-theme="nord"] .el-radio__input.is-checked + .el-radio__label,
+[data-theme="apple"] .el-radio__input.is-checked + .el-radio__label {
+  color: var(--color-primary) !important;
+}

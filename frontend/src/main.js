@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 // Element Plus 样式由 unplugin-vue-components 自动按需引入
+import './styles/themes.css'  // 主题变量（必须在 style.css 之前）
 import './style.css'
 import App from './App.vue'
 import router from './router'
@@ -20,7 +21,9 @@ import {
   // 智能和分析
   Opportunity, MagicStick, Lightning, Cpu, Clock, Collection,
   // 警告和建议
-  Warning, Timer, Top, Bottom, Minus, ChatLineRound
+  Warning, Timer, Top, Bottom, Minus, ChatLineRound,
+  // 设置
+  Setting
 } from '@element-plus/icons-vue'
 
 const app = createApp(App)
@@ -36,7 +39,8 @@ const icons = {
   Search, Aim, Check, CircleCheck, CircleClose, ArrowRight, List,
   DataBoard, Connection, Files, Grid, Monitor,
   Opportunity, MagicStick, Lightning, Cpu, Clock, Collection,
-  Warning, Timer, Top, Bottom, Minus, ChatLineRound
+  Warning, Timer, Top, Bottom, Minus, ChatLineRound,
+  Setting
 }
 
 for (const [name, component] of Object.entries(icons)) {

@@ -9,8 +9,9 @@
   line-height: 1.6;
   font-weight: 400;
 
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f0f1a;
+  /* 使用主题变量 */
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,12 +21,12 @@
 
 a {
   font-weight: 500;
-  color: #409EFF;
+  color: var(--text-link);
   text-decoration: inherit;
 }
 
 a:hover {
-  color: #66b1ff;
+  color: var(--text-link-hover);
 }
 
 body {
@@ -45,26 +46,60 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--scrollbar-track);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* 深色主题下 Element Plus 菜单强制深色背景 */
+.el-menu {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.el-menu-item {
+  color: var(--text-primary) !important;
+  background-color: transparent !important;
+}
+
+.el-menu-item:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+.el-menu-item.is-active {
+  color: var(--sidebar-active-text) !important;
+}
+
+.el-sub-menu__title {
+  color: var(--text-primary) !important;
+  background-color: transparent !important;
+}
+
+/* 深色主题下侧边栏强制深色背景 */
+.el-aside {
+  background: var(--sidebar-bg) !important;
+}
+
+/* 深色主题下抽屉强制深色背景 */
+.el-drawer__body {
+  background-color: var(--bg-secondary) !important;
 }
 
 /* 全局 Loading 遮罩样式 */
 .el-loading-mask {
-  background-color: rgba(15, 15, 26, 0.9) !important;
+  background-color: var(--bg-mask) !important;
 }
 
 .el-loading-spinner .el-loading-text {
-  color: #409EFF !important;
+  color: var(--color-primary) !important;
   font-size: 16px !important;
 }
 
