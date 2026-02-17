@@ -42,10 +42,11 @@ async def startup_event():
     init_db()
 
 # Import routes
-from app.api import requirements, price, contract, chat, auth
+from app.api import requirements, price, contract, chat, auth, users
 
 # Register routes
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(requirements.router, prefix="/api", tags=["requirements"])
 app.include_router(price.router, prefix="/api", tags=["price"])
 app.include_router(contract.router, prefix="/api", tags=["contract"])
