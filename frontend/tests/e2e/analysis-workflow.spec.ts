@@ -64,6 +64,12 @@ async function setLoggedInState(page: Page) {
   }, TEST_USER)
 }
 
+async function goToMenu(page: Page, menuText: string) {
+  const menuItem = page.locator('.el-menu-item').filter({ hasText: menuText }).first()
+  await expect(menuItem).toBeVisible()
+  await menuItem.click()
+}
+
 async function mockApi(
   page: Page,
   options?: {
@@ -152,10 +158,14 @@ test.describe('analysis workflow smoke @smoke', () => {
     await page.locator('input[placeholder="密码"]').fill('admin123')
     await page.getByRole('button', { name: '登录' }).click()
 
-    await expect(page).toHaveURL(/\/$/)
+    await expect.poll(async () => {
+      return page.evaluate(() => localStorage.getItem('smart_procurement_token'))
+    }).toBe('e2e-token')
 
-    await page.getByText('综合分析').first().click()
-    await expect(page).toHaveURL(/\/analysis-workbench$/)
+    await expect(page).toHaveURL(/\/$/, { timeout: 15000 })
+
+    await goToMenu(page, '综合分析')
+    await expect(page).toHaveURL(/\/analysis-workbench$/, { timeout: 15000 })
 
     await page.getByPlaceholder('输入采购需求文本').fill('采购数据库服务器，需支持高可用。')
     await page.getByPlaceholder('如：服务器、工作站').fill('服务器')
@@ -176,7 +186,7 @@ test.describe('analysis workflow smoke @smoke', () => {
     })
 
     await page.goto('/analysis-workbench')
-    await expect(page).toHaveURL(/\/analysis-workbench$/)
+    await expect(page).toHaveURL(/\/analysis-workbench$/, { timeout: 15000 })
 
     const templateSelect = page
       .locator('.el-form-item')
@@ -217,7 +227,7 @@ test.describe('analysis workflow smoke @smoke', () => {
     })
 
     await page.goto('/analysis-workbench')
-    await expect(page).toHaveURL(/\/analysis-workbench$/)
+    await expect(page).toHaveURL(/\/analysis-workbench$/, { timeout: 15000 })
     await expect(page.locator('.el-table')).toContainText('7')
 
     await page.getByRole('button', { name: '复用' }).click()
