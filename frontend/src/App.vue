@@ -13,6 +13,7 @@ const { currentTheme, currentThemeId, availableThemes, setTheme } = useTheme()
 const baseMenuItems = [
   { path: '/', icon: 'DataAnalysis', title: '系统概览' },
   { path: '/chat', icon: 'ChatDotRound', title: 'AI对话' },
+  { path: '/analysis-workbench', icon: 'DataBoard', title: '综合分析' },
   { path: '/requirements', icon: 'Document', title: '需求审查' },
   { path: '/price', icon: 'TrendCharts', title: '价格参考' },
   { path: '/contract', icon: 'DocumentCopy', title: '合同分析' }

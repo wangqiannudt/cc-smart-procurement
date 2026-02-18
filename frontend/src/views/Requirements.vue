@@ -1,7 +1,10 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
+import RequirementsScoreOverview from '../components/requirements/RequirementsScoreOverview.vue'
+import StateBlock from '../components/common/StateBlock.vue'
+import { useDraftCache } from '../composables'
 
 const uploadRef = ref()
 const uploadLoading = ref(false)
@@ -29,7 +32,7 @@ const subtypeOptions = computed(() => {
 // 监听品类变化，清空子类型选择
 watch(selectedCategory, () => {
   selectedSubtype.value = null
-})
+}, { flush: 'sync' })
 
 const uploadConfig = reactive({
   accept: '.docx,.txt',
@@ -39,6 +42,85 @@ const uploadConfig = reactive({
 })
 
 const fileList = ref([])
+
+const draftInitialValue = {
+  inputMode: 'text',
+  textContent: '',
+  selectedCategory: null,
+  selectedSubtype: null
+}
+
+const {
+  state: draftState,
+  hasDraft,
+  autoRestoreEnabled,
+  loadDraft,
+  clearDraft,
+  setAutoRestoreEnabled
+} = useDraftCache('requirements_page_draft', draftInitialValue)
+
+const applyDraftToPage = () => {
+  const nextDraft = draftState.value || draftInitialValue
+  inputMode.value = nextDraft.inputMode === 'file' ? 'text' : (nextDraft.inputMode || 'text')
+  textContent.value = nextDraft.textContent || ''
+  selectedCategory.value = nextDraft.selectedCategory || null
+  selectedSubtype.value = nextDraft.selectedSubtype || null
+}
+
+const syncDraftFromPage = () => {
+  draftState.value = {
+    inputMode: inputMode.value,
+    textContent: textContent.value,
+    selectedCategory: selectedCategory.value,
+    selectedSubtype: selectedSubtype.value
+  }
+}
+
+watch(
+  [inputMode, textContent, selectedCategory, selectedSubtype],
+  syncDraftFromPage
+)
+
+const handleRestoreDraft = () => {
+  if (!loadDraft()) {
+    ElMessage.info('暂无可恢复草稿')
+    return
+  }
+  applyDraftToPage()
+  ElMessage.success('已恢复草稿')
+}
+
+const handleClearDraft = () => {
+  clearDraft()
+  ElMessage.success('草稿缓存已清空')
+}
+
+const handleAutoRestoreChange = (enabled) => {
+  setAutoRestoreEnabled(enabled)
+  ElMessage.info(enabled ? '已开启自动恢复' : '已关闭自动恢复')
+}
+
+const promptDraftRestore = async () => {
+  if (!hasDraft.value || !autoRestoreEnabled.value) {
+    return
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      '检测到上次需求审查草稿，是否恢复？',
+      '草稿恢复',
+      {
+        confirmButtonText: '恢复',
+        cancelButtonText: '暂不恢复',
+        type: 'info'
+      }
+    )
+    if (loadDraft()) {
+      applyDraftToPage()
+      ElMessage.success('已恢复上次草稿')
+    }
+  } catch {}
+}
 
 // 加载品类列表
 const loadCategories = async () => {
@@ -55,8 +137,9 @@ const loadCategories = async () => {
   }
 }
 
-onMounted(() => {
-  loadCategories()
+onMounted(async () => {
+  await loadCategories()
+  await promptDraftRestore()
 })
 
 const handleExceed = () => {
@@ -209,13 +292,42 @@ const groupedFields = computed(() => {
   if (!reviewResult.value?.extracted_fields) return {}
   return reviewResult.value.extracted_fields
 })
+
+const reviewCategoryName = computed(() => {
+  const categoryId = reviewResult.value?.category_id
+  if (!categoryId) return ''
+  return categories.value.find(c => c.id === categoryId)?.name || categoryId
+})
+
+const reviewSubtypeName = computed(() => {
+  const subtypeId = reviewResult.value?.subtype_id
+  if (!subtypeId) return ''
+
+  for (const category of categories.value) {
+    const sub = (category.subtypes || []).find(s => s.id === subtypeId)
+    if (sub) return sub.name
+  }
+  return subtypeId
+})
 </script>
 
 <template>
   <div class="requirements-container">
     <div class="page-header">
-      <h1>需求规范审查</h1>
-      <p>智能分析需求文档，识别潜在问题并提供改进建议</p>
+      <div>
+        <h1>需求规范审查</h1>
+        <p>智能分析需求文档，识别潜在问题并提供改进建议</p>
+      </div>
+      <div class="draft-tools">
+        <el-switch
+          :model-value="autoRestoreEnabled"
+          active-text="自动恢复开"
+          inactive-text="自动恢复关"
+          @change="handleAutoRestoreChange"
+        />
+        <el-button text type="primary" :disabled="!hasDraft" @click="handleRestoreDraft">恢复草稿</el-button>
+        <el-button text type="danger" @click="handleClearDraft">清空草稿</el-button>
+      </div>
     </div>
 
     <!-- 输入面板 - 可折叠 -->
@@ -355,67 +467,13 @@ const groupedFields = computed(() => {
 
     <!-- 审查结果 - 主内容区 -->
     <div class="result-main" v-if="reviewResult">
-      <!-- 评分概览卡片 -->
-      <div class="score-overview">
-        <div class="score-left">
-          <div class="score-circle" :style="{
-            borderColor: getScoreColor(reviewResult.completeness_score),
-            background: `conic-gradient(${getScoreColor(reviewResult.completeness_score)} ${reviewResult.completeness_score * 3.6}deg, rgba(255,255,255,0.1) 0deg)`
-          }">
-            <div class="score-inner">
-              <div class="score-value" :style="{ color: getScoreColor(reviewResult.completeness_score) }">
-                {{ Math.round(reviewResult.completeness_score) }}
-              </div>
-              <div class="score-label">完整度评分</div>
-            </div>
-          </div>
-          <div class="score-info">
-            <div class="score-status" :style="{ color: getScoreColor(reviewResult.completeness_score) }">
-              {{ getScoreStatus(reviewResult.completeness_score) }}
-            </div>
-            <div class="category-tags" v-if="reviewResult.category_id">
-              <el-tag type="primary" effect="dark">
-                {{ categories.find(c => c.id === reviewResult.category_id)?.name || reviewResult.category_id }}
-              </el-tag>
-              <el-tag v-if="reviewResult.subtype_id" type="success" effect="dark">
-                {{ subtypeOptions.find(s => s.id === reviewResult.subtype_id)?.name || reviewResult.subtype_id }}
-              </el-tag>
-            </div>
-          </div>
-        </div>
-        <div class="score-right">
-          <div class="stat-grid">
-            <div class="stat-item error">
-              <div class="stat-icon"><el-icon><CircleClose /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ reviewResult.error_count }}</div>
-                <div class="stat-label">错误</div>
-              </div>
-            </div>
-            <div class="stat-item warning">
-              <div class="stat-icon"><el-icon><Warning /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ reviewResult.warning_count }}</div>
-                <div class="stat-label">警告</div>
-              </div>
-            </div>
-            <div class="stat-item info">
-              <div class="stat-icon"><el-icon><InfoFilled /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ reviewResult.info_count }}</div>
-                <div class="stat-label">提示</div>
-              </div>
-            </div>
-            <div class="stat-item fields">
-              <div class="stat-icon"><el-icon><Document /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ reviewResult.field_count }}</div>
-                <div class="stat-label">提取字段</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <RequirementsScoreOverview
+        :review-result="reviewResult"
+        :category-name="reviewCategoryName"
+        :subtype-name="reviewSubtypeName"
+        :score-color="getScoreColor(reviewResult.completeness_score)"
+        :score-status="getScoreStatus(reviewResult.completeness_score)"
+      />
 
       <!-- 主要内容区域 -->
       <div class="result-content">
@@ -561,11 +619,12 @@ const groupedFields = computed(() => {
       </div>
     </div>
 
-    <!-- 空状态 -->
-    <div class="empty-state" v-else-if="!showInputPanel">
-      <el-icon class="empty-icon"><Document /></el-icon>
-      <p>请输入或上传需求文档开始审查</p>
-    </div>
+    <StateBlock
+      v-else-if="!showInputPanel"
+      type="empty"
+      title="尚未开始审查"
+      description="请输入或上传需求文档开始审查。"
+    />
 
     <!-- 问题详情弹窗 -->
     <el-dialog v-model="dialogVisible" title="问题详情" width="500px" class="issue-dialog">
@@ -605,6 +664,10 @@ const groupedFields = computed(() => {
 
 .page-header {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .page-header h1 {
@@ -618,6 +681,14 @@ const groupedFields = computed(() => {
   color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
+}
+
+.draft-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 /* 输入面板 */
@@ -1242,6 +1313,14 @@ const groupedFields = computed(() => {
 }
 
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+  }
+
+  .draft-tools {
+    justify-content: flex-start;
+  }
+
   .score-overview {
     flex-direction: column;
     gap: 20px;

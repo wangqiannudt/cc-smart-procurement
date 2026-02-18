@@ -119,7 +119,7 @@ cc-smart-procurement/
 
 ### 环境要求
 - Python 3.8+
-- Node.js 18+
+- Node.js 20.19+（或 22.12+）
 
 ### 安装依赖
 
@@ -183,6 +183,41 @@ cd frontend && npm run dev
 ```bash
 ./stop_new.sh
 ```
+
+## 测试与CI
+
+### 本地测试命令
+
+```bash
+# 后端测试
+cd backend
+./venv/bin/python -m pytest -q
+
+# 前端单元测试
+cd frontend
+npm run test:run
+
+# 前端构建
+cd frontend
+npm run build
+
+# E2E 冒烟测试（3条核心链路）
+cd frontend
+npm run test:e2e:smoke
+
+# E2E 联调测试（真实后端）
+cd frontend
+npm run test:e2e:integration
+```
+
+### CI 质量门禁
+
+仓库已提供 GitHub Actions 流水线：`/.github/workflows/ci.yml`，包含：
+
+- Backend：依赖安装 + 语法检查 + `pytest`
+- Frontend：`npm run test:run` + `npm run build`
+- E2E 冒烟（mock API）：`npm run test:e2e:smoke`
+- E2E 联调（真实后端）：`npm run test:e2e:integration`
 
 ## API接口
 
