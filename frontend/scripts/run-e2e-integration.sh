@@ -14,10 +14,18 @@ if ! command -v curl >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ ! -x "$BACKEND_PYTHON" ]]; then
-  echo "Backend python executable not found: $BACKEND_PYTHON"
-  echo "Set BACKEND_PYTHON to a valid python executable."
-  exit 1
+if [[ "$BACKEND_PYTHON" == */* ]]; then
+  if [[ ! -x "$BACKEND_PYTHON" ]]; then
+    echo "Backend python executable not found: $BACKEND_PYTHON"
+    echo "Set BACKEND_PYTHON to a valid python executable."
+    exit 1
+  fi
+else
+  if ! command -v "$BACKEND_PYTHON" >/dev/null 2>&1; then
+    echo "Backend python executable not found in PATH: $BACKEND_PYTHON"
+    echo "Set BACKEND_PYTHON to a valid python executable."
+    exit 1
+  fi
 fi
 
 cleanup() {
