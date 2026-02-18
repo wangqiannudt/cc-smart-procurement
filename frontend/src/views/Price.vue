@@ -1,8 +1,12 @@
 <script setup>
-import { ref, reactive, onMounted, nextTick, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, reactive, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
-import * as echarts from 'echarts'
+import PriceSearchCard from '../components/price/PriceSearchCard.vue'
+import PriceStatsCard from '../components/price/PriceStatsCard.vue'
+import StateBlock from '../components/common/StateBlock.vue'
+import { useDraftCache } from '../composables'
+import { ensureEcharts } from '../tooling/echartsLazyLoader'
 
 const loading = ref(false)
 const predictionLoading = ref(false)
@@ -17,6 +21,10 @@ const searchForm = reactive({
   minPrice: null,
   maxPrice: null
 })
+
+const onSearchFormUpdate = (nextValue) => {
+  Object.assign(searchForm, nextValue)
+}
 
 const categories = ref([])
 const priceData = ref({
@@ -33,6 +41,94 @@ const predictionMonths = ref(3)
 
 // 市场洞察数据
 const marketInsights = ref(null)
+
+const draftInitialValue = {
+  searchForm: {
+    category: '',
+    keyword: '',
+    minPrice: null,
+    maxPrice: null
+  },
+  predictionKeyword: '',
+  predictionMonths: 3
+}
+
+const {
+  state: draftState,
+  hasDraft,
+  autoRestoreEnabled,
+  loadDraft,
+  clearDraft,
+  setAutoRestoreEnabled
+} = useDraftCache('price_page_draft', draftInitialValue)
+
+const applyDraftToPage = () => {
+  const nextSearchForm = draftState.value.searchForm || draftInitialValue.searchForm
+  Object.assign(searchForm, nextSearchForm)
+  predictionKeyword.value = draftState.value.predictionKeyword || ''
+  predictionMonths.value = draftState.value.predictionMonths || 3
+}
+
+const syncDraftFromPage = () => {
+  draftState.value = {
+    searchForm: { ...searchForm },
+    predictionKeyword: predictionKeyword.value,
+    predictionMonths: predictionMonths.value
+  }
+}
+
+watch(
+  [
+    () => searchForm.category,
+    () => searchForm.keyword,
+    () => searchForm.minPrice,
+    () => searchForm.maxPrice,
+    predictionKeyword,
+    predictionMonths
+  ],
+  syncDraftFromPage
+)
+
+const handleRestoreDraft = () => {
+  if (!loadDraft()) {
+    ElMessage.info('暂无可恢复草稿')
+    return
+  }
+  applyDraftToPage()
+  ElMessage.success('已恢复草稿')
+}
+
+const handleClearDraft = () => {
+  clearDraft()
+  ElMessage.success('草稿缓存已清空')
+}
+
+const handleAutoRestoreChange = (enabled) => {
+  setAutoRestoreEnabled(enabled)
+  ElMessage.info(enabled ? '已开启自动恢复' : '已关闭自动恢复')
+}
+
+const promptDraftRestore = async () => {
+  if (!hasDraft.value || !autoRestoreEnabled.value) {
+    return
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      '检测到上次价格分析草稿，是否恢复？',
+      '草稿恢复',
+      {
+        confirmButtonText: '恢复',
+        cancelButtonText: '暂不恢复',
+        type: 'info'
+      }
+    )
+    if (loadDraft()) {
+      applyDraftToPage()
+      ElMessage.success('已恢复上次草稿')
+    }
+  } catch {}
+}
 
 const handleSearch = async () => {
   loading.value = true
@@ -138,13 +234,14 @@ const loadMarketInsights = async () => {
   }
 }
 
-const initChart = () => {
+const initChart = async () => {
   if (!chartRef.value) return
 
   if (chartInstance.value) {
     chartInstance.value.dispose()
   }
 
+  const echarts = await ensureEcharts()
   chartInstance.value = echarts.init(chartRef.value)
 
   const trendData = priceData.value.trendData
@@ -209,13 +306,14 @@ const initChart = () => {
 }
 
 // 初始化预测图表
-const initPredictionChart = () => {
+const initPredictionChart = async () => {
   if (!predictionChartRef.value || !predictionData.value) return
 
   if (predictionChartInstance.value) {
     predictionChartInstance.value.dispose()
   }
 
+  const echarts = await ensureEcharts()
   predictionChartInstance.value = echarts.init(predictionChartRef.value)
 
   const predictions = predictionData.value.predictions
@@ -360,53 +458,50 @@ const getCategoryColor = (category) => {
 }
 
 onMounted(() => {
+  promptDraftRestore()
   loadCategories()
   loadMarketInsights()
 
-  window.addEventListener('resize', () => {
+  window.addEventListener('resize', handleResize)
+})
+
+const handleResize = () => {
     if (chartInstance.value) chartInstance.value.resize()
     if (predictionChartInstance.value) predictionChartInstance.value.resize()
-  })
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
 <template>
   <div class="price-container">
     <div class="page-header">
-      <h1>价格参考与审价</h1>
-      <p>查询历史价格数据，分析价格趋势，智能预测未来走势</p>
+      <div>
+        <h1>价格参考与审价</h1>
+        <p>查询历史价格数据，分析价格趋势，智能预测未来走势</p>
+      </div>
+      <div class="draft-tools">
+        <el-switch
+          :model-value="autoRestoreEnabled"
+          active-text="自动恢复开"
+          inactive-text="自动恢复关"
+          @change="handleAutoRestoreChange"
+        />
+        <el-button text type="primary" :disabled="!hasDraft" @click="handleRestoreDraft">恢复草稿</el-button>
+        <el-button text type="danger" @click="handleClearDraft">清空草稿</el-button>
+      </div>
     </div>
 
-    <!-- 搜索表单 -->
-    <div class="card search-card">
-      <div class="card-header">
-        <h3>搜索筛选</h3>
-        <el-icon><Search /></el-icon>
-      </div>
-      <el-form :model="searchForm" inline class="search-form">
-        <el-form-item label="商品分类">
-          <el-select v-model="searchForm.category" placeholder="请选择分类" clearable style="width: 180px">
-            <el-option v-for="cat in categories" :key="cat" :label="cat" :value="cat" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="关键词">
-          <el-input v-model="searchForm.keyword" placeholder="产品名称或规格" clearable style="width: 200px" />
-        </el-form-item>
-        <el-form-item label="价格范围">
-          <el-input-number v-model="searchForm.minPrice" :min="0" :step="10000" controls-position="right" style="width: 130px" />
-          <span class="price-separator">-</span>
-          <el-input-number v-model="searchForm.maxPrice" :min="0" :step="10000" controls-position="right" style="width: 130px" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleSearch" :loading="loading">
-            <el-icon><Search /></el-icon> 查询
-          </el-button>
-          <el-button @click="handleReset">
-            <el-icon><RefreshRight /></el-icon> 重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <PriceSearchCard
+      :model-value="searchForm"
+      :categories="categories"
+      :loading="loading"
+      @update:model-value="onSearchFormUpdate"
+      @search="handleSearch"
+      @reset="handleReset"
+    />
 
     <!-- 价格预测模块 -->
     <div class="card prediction-card">
@@ -481,10 +576,12 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-else class="prediction-empty">
-        <el-icon :size="48"><TrendCharts /></el-icon>
-        <p>输入关键词开始智能价格预测</p>
-      </div>
+      <StateBlock
+        v-else
+        type="empty"
+        title="尚未生成预测"
+        description="输入关键词后可预测未来价格趋势。"
+      />
     </div>
 
     <div class="content-grid">
@@ -522,34 +619,16 @@ onMounted(() => {
           <el-icon><TrendCharts /></el-icon>
         </div>
         <div ref="chartRef" class="chart-container"></div>
-        <div class="chart-empty" v-if="priceData.trendData.length === 0">
-          <el-icon :size="48"><TrendCharts /></el-icon>
-          <p>执行搜索后显示趋势图</p>
-        </div>
+        <StateBlock
+          v-if="priceData.trendData.length === 0"
+          type="empty"
+          title="暂无趋势数据"
+          description="执行搜索后将展示历史价格趋势。"
+        />
       </div>
     </div>
 
-    <!-- 价格统计 -->
-    <div class="card stats-card">
-      <div class="card-header">
-        <h3>价格统计</h3>
-        <el-icon><DataBoard /></el-icon>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-label">最低价</div>
-          <div class="stat-value min">{{ formatPrice(priceData.priceRange.min) }}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">最高价</div>
-          <div class="stat-value max">{{ formatPrice(priceData.priceRange.max) }}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">平均价</div>
-          <div class="stat-value avg">{{ formatPrice(priceData.priceRange.avg) }}</div>
-        </div>
-      </div>
-    </div>
+    <PriceStatsCard :price-range="priceData.priceRange" :format-price="formatPrice" />
 
     <!-- 市场洞察 -->
     <div v-if="marketInsights?.insights?.length" class="card insights-card">
@@ -580,6 +659,8 @@ onMounted(() => {
 .page-header { margin-bottom: 25px; }
 .page-header h1 { color: var(--text-primary); font-size: 28px; margin: 0 0 8px 0; font-weight: 600; }
 .page-header p { color: var(--text-secondary); font-size: 14px; margin: 0; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.draft-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
 .card { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 20px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
@@ -670,5 +751,7 @@ onMounted(() => {
   .stats-grid { grid-template-columns: 1fr; }
   .advice-banner { flex-direction: column; text-align: center; }
   .advice-urgency { margin-top: 10px; }
+  .page-header { flex-direction: column; }
+  .draft-tools { justify-content: flex-start; }
 }
 </style>

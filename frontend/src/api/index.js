@@ -181,7 +181,12 @@ export const apiEndpoints = {
   // 聊天
   chat: (data) => request.post('/chat/conversation', data),
   procurementAnalysis: (data) => request.post('/chat/procurement-analysis', data),
-  priceRecommendation: (data) => request.post('/chat/price-recommendation', data)
+  priceRecommendation: (data) => request.post('/chat/price-recommendation', data),
+
+  // 综合分析工作流
+  runAnalysisWorkflow: (data) => request.post('/analysis/workflow', data),
+  getAnalysisHistory: (params) => request.get('/analysis/history', params),
+  reuseAnalysisHistory: (historyId) => request.post(`/analysis/history/${historyId}/reuse`)
 }
 
 export default api

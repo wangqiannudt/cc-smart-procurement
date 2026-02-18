@@ -38,6 +38,7 @@ async def health_check():
 from app.core.database import init_db, SessionLocal
 from app.core.security import get_password_hash
 from app.models.user import User, UserRole
+from app.models.analysis_history import AnalysisHistory
 
 @app.on_event("startup")
 async def startup_event():
@@ -62,7 +63,17 @@ async def startup_event():
         db.close()
 
 # Import routes
-from app.api import requirements, price, contract, chat, auth, users, requirements_mgmt, statistics
+from app.api import (
+    requirements,
+    price,
+    contract,
+    chat,
+    auth,
+    users,
+    requirements_mgmt,
+    statistics,
+    analysis,
+)
 
 # Register routes
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
@@ -70,6 +81,7 @@ app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(requirements.router, prefix="/api", tags=["requirements"])
 app.include_router(requirements_mgmt.router, prefix="/api/requirements", tags=["requirements_mgmt"])
 app.include_router(statistics.router, prefix="/api/statistics", tags=["statistics"])
+app.include_router(analysis.router, prefix="/api/analysis", tags=["analysis"])
 app.include_router(price.router, prefix="/api", tags=["price"])
 app.include_router(contract.router, prefix="/api", tags=["contract"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])

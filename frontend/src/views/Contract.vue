@@ -1,7 +1,10 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
+import ContractRiskOverview from '../components/contract/ContractRiskOverview.vue'
+import StateBlock from '../components/common/StateBlock.vue'
+import { useDraftCache } from '../composables'
 
 const uploadRef = ref()
 const uploadLoading = ref(false)
@@ -20,6 +23,76 @@ const uploadConfig = reactive({
 })
 
 const fileList = ref([])
+
+const draftInitialValue = {
+  inputMode: 'text',
+  textContent: ''
+}
+
+const {
+  state: draftState,
+  hasDraft,
+  autoRestoreEnabled,
+  loadDraft,
+  clearDraft,
+  setAutoRestoreEnabled
+} = useDraftCache('contract_page_draft', draftInitialValue)
+
+const applyDraftToPage = () => {
+  const nextDraft = draftState.value || draftInitialValue
+  inputMode.value = nextDraft.inputMode === 'file' ? 'text' : (nextDraft.inputMode || 'text')
+  textContent.value = nextDraft.textContent || ''
+}
+
+const syncDraftFromPage = () => {
+  draftState.value = {
+    inputMode: inputMode.value,
+    textContent: textContent.value
+  }
+}
+
+watch([inputMode, textContent], syncDraftFromPage)
+
+const handleRestoreDraft = () => {
+  if (!loadDraft()) {
+    ElMessage.info('暂无可恢复草稿')
+    return
+  }
+  applyDraftToPage()
+  ElMessage.success('已恢复草稿')
+}
+
+const handleClearDraft = () => {
+  clearDraft()
+  ElMessage.success('草稿缓存已清空')
+}
+
+const handleAutoRestoreChange = (enabled) => {
+  setAutoRestoreEnabled(enabled)
+  ElMessage.info(enabled ? '已开启自动恢复' : '已关闭自动恢复')
+}
+
+const promptDraftRestore = async () => {
+  if (!hasDraft.value || !autoRestoreEnabled.value) {
+    return
+  }
+
+  try {
+    await ElMessageBox.confirm(
+      '检测到上次合同分析草稿，是否恢复？',
+      '草稿恢复',
+      {
+        confirmButtonText: '恢复',
+        cancelButtonText: '暂不恢复',
+        type: 'info'
+      }
+    )
+    if (loadDraft()) {
+      applyDraftToPage()
+      ElMessage.success('已恢复上次草稿')
+    }
+  } catch {}
+}
 
 const handleExceed = () => {
   ElMessage.warning('只能上传一个文件')
@@ -171,13 +244,29 @@ const missingElements = computed(() => {
     .filter(([_, element]) => !element.found)
     .map(([key, element]) => ({ name: key, ...element }))
 })
+
+onMounted(async () => {
+  await promptDraftRestore()
+})
 </script>
 
 <template>
   <div class="contract-container">
     <div class="page-header">
-      <h1>合同要素识别与风险提示</h1>
-      <p>智能分析合同文档，识别关键要素和潜在风险</p>
+      <div>
+        <h1>合同要素识别与风险提示</h1>
+        <p>智能分析合同文档，识别关键要素和潜在风险</p>
+      </div>
+      <div class="draft-tools">
+        <el-switch
+          :model-value="autoRestoreEnabled"
+          active-text="自动恢复开"
+          inactive-text="自动恢复关"
+          @change="handleAutoRestoreChange"
+        />
+        <el-button text type="primary" :disabled="!hasDraft" @click="handleRestoreDraft">恢复草稿</el-button>
+        <el-button text type="danger" @click="handleClearDraft">清空草稿</el-button>
+      </div>
     </div>
 
     <!-- 输入面板 - 可折叠 -->
@@ -272,60 +361,11 @@ const missingElements = computed(() => {
 
     <!-- 分析结果 - 主内容区 -->
     <div class="result-main" v-if="analysisResult">
-      <!-- 风险概览卡片 -->
-      <div class="risk-overview-card">
-        <div class="risk-left">
-          <div class="risk-badge-large" :style="{
-            borderColor: getOverallRiskColor(analysisResult.risk_level),
-            background: `conic-gradient(${getOverallRiskColor(analysisResult.risk_level)} ${(100 - analysisResult.completeness) * 3.6}deg, rgba(255,255,255,0.1) 0deg)`
-          }">
-            <div class="risk-badge-inner">
-              <div class="risk-level-text" :style="{ color: getOverallRiskColor(analysisResult.risk_level) }">
-                {{ analysisResult.risk_level }}
-              </div>
-              <div class="risk-level-label">风险评估</div>
-            </div>
-          </div>
-          <div class="risk-info">
-            <div class="completeness-value" :style="{ color: getOverallRiskColor(analysisResult.risk_level) }">
-              {{ analysisResult.completeness }}%
-            </div>
-            <div class="completeness-label">合同完整度</div>
-          </div>
-        </div>
-        <div class="risk-right">
-          <div class="stat-grid">
-            <div class="stat-item high">
-              <div class="stat-icon"><el-icon><WarnTriangleFilled /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ analysisResult.risk_summary['高风险'] || 0 }}</div>
-                <div class="stat-label">高风险</div>
-              </div>
-            </div>
-            <div class="stat-item medium">
-              <div class="stat-icon"><el-icon><Warning /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ analysisResult.risk_summary['中风险'] || 0 }}</div>
-                <div class="stat-label">中风险</div>
-              </div>
-            </div>
-            <div class="stat-item low">
-              <div class="stat-icon"><el-icon><InfoFilled /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ analysisResult.risk_summary['需特别关注'] || 0 }}</div>
-                <div class="stat-label">需关注</div>
-              </div>
-            </div>
-            <div class="stat-item elements">
-              <div class="stat-icon"><el-icon><Document /></el-icon></div>
-              <div class="stat-content">
-                <div class="stat-value">{{ foundElements.length }}</div>
-                <div class="stat-label">已识别要素</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ContractRiskOverview
+        :analysis-result="analysisResult"
+        :found-elements-count="foundElements.length"
+        :risk-color="getOverallRiskColor(analysisResult.risk_level)"
+      />
 
       <!-- 主要内容区域 -->
       <div class="result-content">
@@ -473,11 +513,12 @@ const missingElements = computed(() => {
       </div>
     </div>
 
-    <!-- 空状态 -->
-    <div class="empty-state" v-else-if="!showInputPanel">
-      <el-icon class="empty-icon"><Document /></el-icon>
-      <p>请输入或上传合同文档开始分析</p>
-    </div>
+    <StateBlock
+      v-else-if="!showInputPanel"
+      type="empty"
+      title="尚未开始分析"
+      description="请输入或上传合同文档开始分析。"
+    />
 
     <!-- 风险详情弹窗 -->
     <el-dialog v-model="dialogVisible" title="风险条款详情" width="550px" class="risk-dialog">
@@ -515,6 +556,10 @@ const missingElements = computed(() => {
 
 .page-header {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .page-header h1 {
@@ -528,6 +573,14 @@ const missingElements = computed(() => {
   color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
+}
+
+.draft-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 /* 输入面板 */
@@ -1127,6 +1180,14 @@ const missingElements = computed(() => {
 }
 
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+  }
+
+  .draft-tools {
+    justify-content: flex-start;
+  }
+
   .risk-overview-card {
     flex-direction: column;
     gap: 20px;

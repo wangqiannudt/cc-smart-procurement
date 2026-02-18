@@ -13,27 +13,28 @@ export function useChat() {
   const messagesContainer = ref(null)
   const { formatContent } = useFormat()
 
+  const createSessionId = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID()
+    }
+    return `chat-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+  }
+
+  const getWelcomeMessage = () => ({
+    role: 'assistant',
+    content: '您好！我是智慧采购系统的AI助手，有什么可以帮您的吗？',
+    time: new Date().toLocaleTimeString()
+  })
+
   /**
    * 初始化会话
    */
   const initSession = async () => {
-    try {
-      const result = await apiEndpoints.chat({ message: '你好' })
-      if (result.success && result.data.session_id) {
-        sessionId.value = result.data.session_id
-        messages.value.push({
-          role: 'assistant',
-          content: result.data.response,
-          time: new Date().toLocaleTimeString()
-        })
-      }
-    } catch (e) {
-      console.error('初始化会话失败:', e)
-      messages.value.push({
-        role: 'assistant',
-        content: '您好！我是智慧采购系统的AI助手，有什么可以帮您的吗？',
-        time: new Date().toLocaleTimeString()
-      })
+    if (!sessionId.value) {
+      sessionId.value = createSessionId()
+    }
+    if (messages.value.length === 0) {
+      messages.value.push(getWelcomeMessage())
     }
   }
 
@@ -54,9 +55,12 @@ export function useChat() {
     loading.value = true
 
     try {
-      const requestData = { message: userMessage }
-      if (sessionId.value) {
-        requestData.session_id = sessionId.value
+      if (!sessionId.value) {
+        sessionId.value = createSessionId()
+      }
+      const requestData = {
+        message: userMessage,
+        session_id: sessionId.value
       }
 
       const result = await apiEndpoints.chat(requestData)

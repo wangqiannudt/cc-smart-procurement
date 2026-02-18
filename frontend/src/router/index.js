@@ -24,6 +24,11 @@ const routes = [
     component: () => import('../views/Chat.vue')
   },
   {
+    path: '/analysis-workbench',
+    name: 'AnalysisWorkbench',
+    component: () => import('../views/AnalysisWorkbench.vue')
+  },
+  {
     path: '/requirements',
     name: 'Requirements',
     component: () => import('../views/Requirements.vue')

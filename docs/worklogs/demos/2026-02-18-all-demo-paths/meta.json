@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-02-18T11:27:28.364Z",
+  "date": "2026-02-18",
+  "demo_root": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths",
+  "frames_root": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames",
+  "scenarios": [
+    {
+      "id": "demo-01-login-analysis-full",
+      "title": "登录到综合分析完整链路",
+      "description": "登录 -> 综合分析 -> 模板填充 -> 提交分析 -> 历史复用",
+      "route": "/analysis-workbench",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-01-login-analysis-full",
+      "frame_count": 29,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-01-login-analysis-full.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-01-login-analysis-full.png"
+    },
+    {
+      "id": "demo-02-home-overview",
+      "title": "系统概览",
+      "description": "进入首页概览，展示状态卡片、推荐、活动和快捷入口",
+      "route": "/",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-02-home-overview",
+      "frame_count": 11,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-02-home-overview.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-02-home-overview.png"
+    },
+    {
+      "id": "demo-03-chat-assistant",
+      "title": "AI对话",
+      "description": "进入对话页并发送问题，展示回答和快捷操作",
+      "route": "/chat",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-03-chat-assistant",
+      "frame_count": 12,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-03-chat-assistant.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-03-chat-assistant.png"
+    },
+    {
+      "id": "demo-04-requirements-review",
+      "title": "需求审查",
+      "description": "录入需求文本并执行审查，展示结果面板",
+      "route": "/requirements",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-04-requirements-review",
+      "frame_count": 11,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-04-requirements-review.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-04-requirements-review.png"
+    },
+    {
+      "id": "demo-05-price-reference",
+      "title": "价格参考",
+      "description": "执行价格查询与预测，展示趋势图和预测图",
+      "route": "/price",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-05-price-reference",
+      "frame_count": 13,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-05-price-reference.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-05-price-reference.png"
+    },
+    {
+      "id": "demo-06-contract-analysis",
+      "title": "合同分析",
+      "description": "录入合同文本并分析，展示风险条款分层",
+      "route": "/contract",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-06-contract-analysis",
+      "frame_count": 82,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-06-contract-analysis.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-06-contract-analysis.png"
+    },
+    {
+      "id": "demo-07-admin-console",
+      "title": "管理后台",
+      "description": "查看用户管理、工作量和分类统计三个管理视图",
+      "route": "/admin",
+      "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-07-admin-console",
+      "frame_count": 12,
+      "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-07-admin-console.mp4",
+      "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-07-admin-console.png"
+    }
+  ]
+}
