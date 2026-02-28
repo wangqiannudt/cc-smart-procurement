@@ -51,13 +51,44 @@ echo "✅ 环境依赖检查通过"
 echo ""
 echo "🔧 配置后端服务..."
 
-# 检查是否已有后端venv
-if [ -d "backend/venv/bin/activate" ]; then
-    echo "✅ 发现后端虚拟环境"
-else
+# 清理可能存在的旧进程
+echo "🧹 清理旧进程..."
+pkill -f "uvicorn app.main:app" 2>/dev/null || true
+sleep 1
+
+# 优先使用 Homebrew Python，避免 miniconda 问题
+PYTHON_CMD=""
+if [ -x "/opt/homebrew/opt/python@3.12/bin/python3.12" ]; then
+    PYTHON_CMD="/opt/homebrew/opt/python@3.12/bin/python3.12"
+    echo "✅ 使用 Homebrew Python 3.12"
+elif [ -x "/opt/homebrew/bin/python3" ]; then
+    PYTHON_CMD="/opt/homebrew/bin/python3"
+    echo "✅ 使用 Homebrew Python"
+elif command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+    echo "⚠️  使用系统默认 Python3"
+fi
+
+# 检查是否已有后端venv且 Python 可用
+if [ -f "backend/venv/bin/activate" ]; then
+    # 验证 venv 中的 Python 是否正常工作
+    if backend/venv/bin/python --version &> /dev/null; then
+        echo "✅ 发现后端虚拟环境"
+    else
+        echo "⚠️  虚拟环境损坏，正在重建..."
+        rm -rf backend/venv
+    fi
+fi
+
+# 如果 venv 不存在，创建新的
+if [ ! -f "backend/venv/bin/activate" ]; then
     echo "📦 创建后端虚拟环境..."
     cd backend
-    python3 -m venv venv
+    $PYTHON_CMD -m venv venv
+    if [ $? -ne 0 ]; then
+        echo "❌ 虚拟环境创建失败"
+        exit 1
+    fi
     echo "✅ 虚拟环境创建完成"
     cd ..
 fi
@@ -67,7 +98,12 @@ cd backend
 source venv/bin/activate
 
 # 检查依赖是否需要更新（比较 requirements.txt 哈希）
-REQUIREMENTS_HASH=$(md5sum requirements.txt 2>/dev/null | cut -d' ' -f1)
+# macOS 使用 md5，Linux 使用 md5sum
+if command -v md5 &> /dev/null; then
+    REQUIREMENTS_HASH=$(md5 -q requirements.txt 2>/dev/null)
+else
+    REQUIREMENTS_HASH=$(md5sum requirements.txt 2>/dev/null | cut -d' ' -f1)
+fi
 INSTALLED_HASH=$(cat .requirements_installed 2>/dev/null || echo "")
 
 if [ "$REQUIREMENTS_HASH" != "$INSTALLED_HASH" ]; then
@@ -77,18 +113,6 @@ if [ "$REQUIREMENTS_HASH" != "$INSTALLED_HASH" ]; then
     echo "✅ 后端依赖安装完成"
 else
     echo "✅ 后端依赖已是最新，跳过安装"
-fi
-
-# 检查AI相关依赖（仅在首次时检查）
-if [ ! -f .ai_deps_installed ]; then
-    if python3 -c "import langchain" &> /dev/null 2>&1; then
-        echo "✅ AI依赖(LangChain)已安装"
-    else
-        echo "🤖 安装AI依赖(LangChain, SentenceTransformers)..."
-        pip install langchain langchain-community sentence-transformers
-        echo "✅ AI依赖安装完成"
-    fi
-    touch .ai_deps_installed
 fi
 
 # 启动后端
@@ -214,7 +238,3 @@ echo "     -d '{\"message\": \"我需要采购服务器\"}'"
 echo ""
 echo "🔔 系统已就绪，尽情享受AI采购助手！"
 echo ""
-
-# 删除旧的演示服务
-echo "🧹 清理旧服务..."
-pkill -f "python3 -m http.server" 2>/dev/null || true

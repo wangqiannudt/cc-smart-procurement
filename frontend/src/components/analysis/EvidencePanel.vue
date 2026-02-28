@@ -48,4 +48,28 @@ const props = defineProps({
 .evidence-panel {
   margin-bottom: 16px;
 }
+
+.evidence-panel :deep(.el-tabs__header),
+.evidence-panel :deep(.el-tabs__nav-wrap::after),
+.evidence-panel :deep(.el-tabs__item) {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.evidence-panel :deep(.el-tabs__item.is-active) {
+  color: var(--color-primary) !important;
+}
+
+.evidence-panel :deep(.el-tabs__content),
+.evidence-panel :deep(.el-tab-pane) {
+  background: transparent !important;
+}
+
+.evidence-panel :deep(.el-table),
+.evidence-panel :deep(.el-table__inner-wrapper),
+.evidence-panel :deep(.el-table__body-wrapper),
+.evidence-panel :deep(.el-table__empty-block) {
+  background: var(--bg-card) !important;
+}
 </style>

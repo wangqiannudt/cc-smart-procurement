@@ -75,12 +75,48 @@ const riskTagType = (score) => {
   align-items: center;
 }
 
+.sub-sections {
+  margin-top: 12px;
+}
+
+.result-panel :deep(.el-descriptions__body),
+.result-panel :deep(.el-descriptions__table),
+.result-panel :deep(.el-descriptions__table tr),
+.result-panel :deep(.el-descriptions__table th),
+.result-panel :deep(.el-descriptions__table td) {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.result-panel :deep(.el-descriptions__label) {
+  background: var(--bg-card-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.result-panel :deep(.el-collapse) {
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.result-panel :deep(.el-collapse-item__header),
+.result-panel :deep(.el-collapse-item__wrap),
+.result-panel :deep(.el-collapse-item__content) {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
 pre {
   margin: 0;
+  padding: 8px 10px;
   font-size: 12px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
   color: var(--text-primary);
 }
 </style>

@@ -14,6 +14,7 @@ const form = ref({
 const loading = ref(false)
 
 const handleLogin = async () => {
+  if (loading.value) return
   if (!form.value.username || !form.value.password) {
     ElMessage.warning('请输入用户名和密码')
     return
@@ -42,6 +43,7 @@ const handleLogin = async () => {
             placeholder="用户名"
             prefix-icon="User"
             size="large"
+            @keyup.enter="handleLogin"
           />
         </el-form-item>
         <el-form-item>
@@ -52,14 +54,15 @@ const handleLogin = async () => {
             prefix-icon="Lock"
             size="large"
             show-password
+            @keyup.enter="handleLogin"
           />
         </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
+            native-type="submit"
             size="large"
             :loading="loading"
-            @click="handleLogin"
             style="width: 100%"
           >
             登录

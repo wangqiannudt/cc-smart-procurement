@@ -2,6 +2,10 @@
 .env
 *.env
 backend/.env
+backend/.coverage
+backend/.requirements_installed
+backend/smart_procurement.db
+
 
 # Python
 __pycache__/
@@ -46,3 +50,9 @@ logs/
 *.tmp
 *.temp
 .cache/
+
+# media files
+*.png
+*.mp4
+*.gif
+
