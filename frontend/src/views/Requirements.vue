@@ -1,10 +1,11 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import RequirementsScoreOverview from '../components/requirements/RequirementsScoreOverview.vue'
 import StateBlock from '../components/common/StateBlock.vue'
 import { useDraftCache } from '../composables'
+import { showStyledConfirm } from '../tooling/styledConfirm'
 
 const uploadRef = ref()
 const uploadLoading = ref(false)
@@ -106,13 +107,12 @@ const promptDraftRestore = async () => {
   }
 
   try {
-    await ElMessageBox.confirm(
+    await showStyledConfirm(
       '检测到上次需求审查草稿，是否恢复？',
       '草稿恢复',
       {
         confirmButtonText: '恢复',
-        cancelButtonText: '暂不恢复',
-        type: 'info'
+        cancelButtonText: '暂不恢复'
       }
     )
     if (loadDraft()) {

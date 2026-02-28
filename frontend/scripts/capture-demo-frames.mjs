@@ -85,13 +85,49 @@ async function dismissDraftRestore(page) {
 }
 
 async function clickMenu(page, menuText, urlPattern) {
-  await page.getByText(menuText, { exact: true }).first().click()
-  await page.waitForURL(urlPattern, { timeout: 15000 })
+  const menuItem = page.locator('.el-menu-item').filter({ hasText: menuText }).first()
+  await menuItem.waitFor({ state: 'visible', timeout: 15000 })
+  await menuItem.click()
+  await page.waitForURL(urlPattern, { timeout: 20000 })
+}
+
+async function showcasePageScroll(page, snap, options = {}) {
+  const {
+    downSteps = 2,
+    upSteps = 2,
+    deltaY = 520,
+    waitMs = 260,
+    startPauseMs = 180
+  } = options
+
+  await snap(startPauseMs, 2)
+  for (let i = 0; i < downSteps; i += 1) {
+    await page.mouse.wheel(0, deltaY)
+    await snap(waitMs, 2)
+  }
+  for (let i = 0; i < upSteps; i += 1) {
+    await page.mouse.wheel(0, -deltaY)
+    await snap(waitMs, 2)
+  }
+}
+
+async function clickFirstButtonIfVisible(page, buttonName, snap) {
+  const button = page.getByRole('button', { name: buttonName }).first()
+  if (await button.isVisible({ timeout: 1500 }).catch(() => false)) {
+    await button.click()
+    if (snap) await snap(220, 2)
+    return true
+  }
+  return false
 }
 
 async function login(page, snap) {
   await page.goto('/login', { waitUntil: 'networkidle' })
-  await snap(180, 2)
+  await snap(220, 2)
+  await page.mouse.wheel(0, 180)
+  await snap(180, 1)
+  await page.mouse.wheel(0, -180)
+  await snap(180, 1)
   await page.locator('input[placeholder="用户名"]').fill('admin')
   await snap(120, 1)
   await page.locator('input[placeholder="密码"]').fill('admin123')
@@ -118,7 +154,7 @@ async function runScenario(page, scenario, scenarioDir) {
   if (scenario.id === 'demo-01-login-analysis-full') {
     await login(page, snap)
     await clickMenu(page, '综合分析', '**/analysis-workbench')
-    await snap(220, 3)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 420 })
 
     const templateSelect = page
       .locator('.el-form-item')
@@ -139,12 +175,14 @@ async function runScenario(page, scenario, scenarioDir) {
     await page.locator('textarea[placeholder="输入采购需求文本"]').fill('采购数据库服务器，要求双机热备与高可用。')
     await page.locator('textarea[placeholder="输入合同条款文本以进行风险分析"]').fill('合同应约定验收标准、质保期限、违约责任及交付时限。')
     await page.locator('input[placeholder="如：服务器、工作站"]').fill('服务器')
-    await snap(240, 3)
+    await snap(260, 3)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 460, waitMs: 240 })
 
     await page.getByRole('button', { name: '开始分析' }).click()
     await snap(220, 2)
     await waitForVisibleWithCapture(page.getByText('综合分析结果'), snap, 80, 240)
-    await snap(280, 4)
+    await snap(300, 4)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 500, waitMs: 240 })
 
     const firstRow = page.locator('.history-panel .el-table__body-wrapper tbody tr').first()
     const reuseButton = firstRow.getByRole('button', { name: '复用' })
@@ -153,21 +191,24 @@ async function runScenario(page, scenario, scenarioDir) {
       await snap(240, 2)
       await waitForVisibleWithCapture(page.getByText('综合分析结果'), snap, 50, 240)
       await snap(300, 4)
+      await showcasePageScroll(page, snap, { downSteps: 1, upSteps: 1, deltaY: 420, waitMs: 240 })
     }
   }
 
   if (scenario.id === 'demo-02-home-overview') {
     await clickMenu(page, '系统概览', '**/')
-    await snap(260, 4)
-    await page.mouse.wheel(0, 460)
-    await snap(240, 3)
-    await page.mouse.wheel(0, -460)
-    await snap(240, 2)
+    await showcasePageScroll(page, snap, { downSteps: 3, upSteps: 3, deltaY: 500, waitMs: 240 })
+    const opened = await clickFirstButtonIfVisible(page, '查看详情', snap)
+    if (opened) {
+      await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 520, waitMs: 220 })
+      await clickMenu(page, '系统概览', '**/')
+      await snap(240, 2)
+    }
   }
 
   if (scenario.id === 'demo-03-chat-assistant') {
     await clickMenu(page, 'AI对话', '**/chat')
-    await snap(240, 3)
+    await showcasePageScroll(page, snap, { downSteps: 1, upSteps: 1, deltaY: 320, waitMs: 220 })
     const input = page.locator('textarea[placeholder="输入您的问题，按 Enter 发送..."]')
     await input.fill('请给一个数据库服务器采购建议，预算 30 万。')
     await snap(180, 1)
@@ -180,12 +221,13 @@ async function runScenario(page, scenario, scenarioDir) {
       260
     )
     await snap(300, 4)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 460, waitMs: 240 })
   }
 
   if (scenario.id === 'demo-04-requirements-review') {
     await clickMenu(page, '需求审查', '**/requirements')
     await dismissDraftRestore(page)
-    await snap(240, 2)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 420, waitMs: 240 })
     await page.locator('textarea[placeholder="请输入或粘贴需求文档内容..."]').fill(
       '需采购 10 台数据库服务器，用于双活容灾。要求提供原厂三年质保，支持虚拟化部署。'
     )
@@ -194,12 +236,13 @@ async function runScenario(page, scenario, scenarioDir) {
     await snap(240, 2)
     await waitForVisibleWithCapture(page.getByText('问题清单'), snap, 70, 240)
     await snap(280, 3)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 480, waitMs: 240 })
   }
 
   if (scenario.id === 'demo-05-price-reference') {
     await clickMenu(page, '价格参考', '**/price')
     await dismissDraftRestore(page)
-    await snap(220, 2)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 420, waitMs: 220 })
     await page.locator('input[placeholder="产品名称或规格"]').fill('服务器')
     await page.getByRole('button', { name: '查询' }).click()
     await snap(260, 3)
@@ -208,13 +251,14 @@ async function runScenario(page, scenario, scenarioDir) {
     await page.getByRole('button', { name: /开始预测/ }).click()
     await snap(240, 2)
     await waitForVisibleWithCapture(page.locator('.prediction-chart canvas').first(), snap, 60, 240)
-    await snap(280, 4)
+    await snap(300, 4)
+    await showcasePageScroll(page, snap, { downSteps: 3, upSteps: 3, deltaY: 520, waitMs: 220 })
   }
 
   if (scenario.id === 'demo-06-contract-analysis') {
     await clickMenu(page, '合同分析', '**/contract')
     await dismissDraftRestore(page)
-    await snap(220, 2)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 420, waitMs: 220 })
     await page.locator('textarea[placeholder="请输入或粘贴合同文档内容..."]').fill(
       '甲方采购服务器设备，乙方应在 30 日内完成交付。若延期每延迟一天按合同金额 1% 赔付，最终解释权归乙方。'
     )
@@ -223,17 +267,18 @@ async function runScenario(page, scenario, scenarioDir) {
     await snap(240, 2)
     await waitForVisibleWithCapture(page.getByText('风险条款'), snap, 70, 240)
     await snap(300, 4)
+    await showcasePageScroll(page, snap, { downSteps: 3, upSteps: 3, deltaY: 520, waitMs: 220 })
   }
 
   if (scenario.id === 'demo-07-admin-console') {
     await clickMenu(page, '管理后台', '**/admin')
-    await snap(260, 3)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 460, waitMs: 220 })
     await page.getByRole('tab', { name: '经办人工作量' }).click()
-    await snap(240, 2)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 500, waitMs: 220, startPauseMs: 120 })
     await page.getByRole('tab', { name: '采购分类统计' }).click()
-    await snap(240, 2)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 500, waitMs: 220, startPauseMs: 120 })
     await page.getByRole('tab', { name: '用户管理' }).click()
-    await snap(260, 3)
+    await showcasePageScroll(page, snap, { downSteps: 2, upSteps: 2, deltaY: 500, waitMs: 220, startPauseMs: 120 })
   }
 
   await snap(400, 2)

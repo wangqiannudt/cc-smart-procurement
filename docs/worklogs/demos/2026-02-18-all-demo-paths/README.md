@@ -1,47 +1,58 @@
-# Demo Video Index
+# 演示视频索引
 
-- Generated at: 2026-02-18T11:27:28.364Z
+- 更新日期：2026-02-28
+- 目录：`/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths`
 
-## Videos
+## 1. 分场景演示（7 条路径）
 
-### 登录到综合分析完整链路
-- Path ID: `demo-01-login-analysis-full`
-- Description: 登录 -> 综合分析 -> 模板填充 -> 提交分析 -> 历史复用
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-01-login-analysis-full.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-01-login-analysis-full.png`
+1. 登录到综合分析完整链路
+- `mp4/demo-01-login-analysis-full.mp4`
 
-### 系统概览
-- Path ID: `demo-02-home-overview`
-- Description: 进入首页概览，展示状态卡片、推荐、活动和快捷入口
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-02-home-overview.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-02-home-overview.png`
+2. 系统概览
+- `mp4/demo-02-home-overview.mp4`
 
-### AI对话
-- Path ID: `demo-03-chat-assistant`
-- Description: 进入对话页并发送问题，展示回答和快捷操作
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-03-chat-assistant.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-03-chat-assistant.png`
+3. AI 对话
+- `mp4/demo-03-chat-assistant.mp4`
 
-### 需求审查
-- Path ID: `demo-04-requirements-review`
-- Description: 录入需求文本并执行审查，展示结果面板
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-04-requirements-review.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-04-requirements-review.png`
+4. 需求审查
+- `mp4/demo-04-requirements-review.mp4`
 
-### 价格参考
-- Path ID: `demo-05-price-reference`
-- Description: 执行价格查询与预测，展示趋势图和预测图
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-05-price-reference.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-05-price-reference.png`
+5. 价格参考
+- `mp4/demo-05-price-reference.mp4`
 
-### 合同分析
-- Path ID: `demo-06-contract-analysis`
-- Description: 录入合同文本并分析，展示风险条款分层
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-06-contract-analysis.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-06-contract-analysis.png`
+6. 合同分析
+- `mp4/demo-06-contract-analysis.mp4`
 
-### 管理后台
-- Path ID: `demo-07-admin-console`
-- Description: 查看用户管理、工作量和分类统计三个管理视图
-- MP4: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-07-admin-console.mp4`
-- Preview: `/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-07-admin-console.png`
+7. 管理后台
+- `mp4/demo-07-admin-console.mp4`
+
+## 2. 合并演示视频
+
+1. 标准合并版
+- `mp4/all-in-one.mp4`
+
+2. 带片头与标题过渡
+- `mp4/all-in-one-with-intro-titles.mp4`
+
+3. 慢速展示（含作者）
+- `mp4/all-in-one-slow-with-author-ali.mp4`
+
+4. 快速节奏（含作者）
+- `mp4/all-in-one-fast-with-author-ali.mp4`
+
+5. 全页面滚动与交互展示版
+- `mp4/all-in-one-full-scroll-interaction-ali.mp4`
+
+## 3. 预览图
+
+每个视频均提供预览帧，位于：
+- `preview/`
+
+## 4. 生成脚本
+
+- 抓帧脚本：`frontend/scripts/capture-demo-frames.mjs`
+- MP4 渲染脚本：`frontend/scripts/render-demo-mp4.py`
+
+## 5. 备注
+
+- 本目录下视频、图片、动图属于演示产物，不建议默认纳入主分支代码审查范围。

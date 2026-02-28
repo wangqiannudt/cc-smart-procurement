@@ -1,12 +1,13 @@
 <script setup>
 import { ref, reactive, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import PriceSearchCard from '../components/price/PriceSearchCard.vue'
 import PriceStatsCard from '../components/price/PriceStatsCard.vue'
 import StateBlock from '../components/common/StateBlock.vue'
 import { useDraftCache } from '../composables'
 import { ensureEcharts } from '../tooling/echartsLazyLoader'
+import { showStyledConfirm } from '../tooling/styledConfirm'
 
 const loading = ref(false)
 const predictionLoading = ref(false)
@@ -114,13 +115,12 @@ const promptDraftRestore = async () => {
   }
 
   try {
-    await ElMessageBox.confirm(
+    await showStyledConfirm(
       '检测到上次价格分析草稿，是否恢复？',
       '草稿恢复',
       {
         confirmButtonText: '恢复',
-        cancelButtonText: '暂不恢复',
-        type: 'info'
+        cancelButtonText: '暂不恢复'
       }
     )
     if (loadDraft()) {

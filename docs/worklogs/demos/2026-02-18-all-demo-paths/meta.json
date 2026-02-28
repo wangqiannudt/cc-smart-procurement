@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-18T11:27:28.364Z",
+  "generated_at": "2026-02-18T12:38:12.093Z",
   "date": "2026-02-18",
   "demo_root": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths",
   "frames_root": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames",
@@ -10,7 +10,7 @@
       "description": "登录 -> 综合分析 -> 模板填充 -> 提交分析 -> 历史复用",
       "route": "/analysis-workbench",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-01-login-analysis-full",
-      "frame_count": 29,
+      "frame_count": 64,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-01-login-analysis-full.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-01-login-analysis-full.png"
     },
@@ -20,7 +20,7 @@
       "description": "进入首页概览，展示状态卡片、推荐、活动和快捷入口",
       "route": "/",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-02-home-overview",
-      "frame_count": 11,
+      "frame_count": 30,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-02-home-overview.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-02-home-overview.png"
     },
@@ -30,7 +30,7 @@
       "description": "进入对话页并发送问题，展示回答和快捷操作",
       "route": "/chat",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-03-chat-assistant",
-      "frame_count": 12,
+      "frame_count": 25,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-03-chat-assistant.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-03-chat-assistant.png"
     },
@@ -40,7 +40,7 @@
       "description": "录入需求文本并执行审查，展示结果面板",
       "route": "/requirements",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-04-requirements-review",
-      "frame_count": 11,
+      "frame_count": 29,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-04-requirements-review.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-04-requirements-review.png"
     },
@@ -50,7 +50,7 @@
       "description": "执行价格查询与预测，展示趋势图和预测图",
       "route": "/price",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-05-price-reference",
-      "frame_count": 13,
+      "frame_count": 35,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-05-price-reference.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-05-price-reference.png"
     },
@@ -60,7 +60,7 @@
       "description": "录入合同文本并分析，展示风险条款分层",
       "route": "/contract",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-06-contract-analysis",
-      "frame_count": 82,
+      "frame_count": 104,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-06-contract-analysis.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-06-contract-analysis.png"
     },
@@ -70,7 +70,7 @@
       "description": "查看用户管理、工作量和分类统计三个管理视图",
       "route": "/admin",
       "frame_dir": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/frames/demo-07-admin-console",
-      "frame_count": 12,
+      "frame_count": 42,
       "mp4_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/mp4/demo-07-admin-console.mp4",
       "preview_path": "/Users/ali/dev/cc-smart-procurement/docs/worklogs/demos/2026-02-18-all-demo-paths/preview/demo-07-admin-console.png"
     }

@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useResponsive, useAuth, useTheme } from './composables'
-import { ElMessageBox } from 'element-plus'
+import { showStyledConfirm } from './tooling/styledConfirm'
 
 const router = useRouter()
 const route = useRoute()
@@ -54,12 +54,14 @@ const handleSelect = (key) => {
 
 const handleLogout = async () => {
   try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
+    await showStyledConfirm('当前会话将结束，确定要退出吗？', '退出登录', {
+      confirmButtonText: '确定退出',
+      cancelButtonText: '取消'
     })
     logout()
+    if (isMobile.value) {
+      closeDrawer()
+    }
     router.push('/login')
   } catch {}
 }
@@ -250,6 +252,7 @@ const handleThemeChange = (themeId) => {
         </div>
       </el-main>
     </el-container>
+
   </div>
 </template>
 
@@ -570,6 +573,7 @@ const handleThemeChange = (themeId) => {
     padding: 12px;
   }
 }
+
 </style>
 
 <style>
